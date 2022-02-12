@@ -9,6 +9,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.HashMap;
 import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Rectangle;
+import javax.swing.ScrollPaneLayout;
+import javax.swing.SwingUtilities;
+
+
 
 
 
@@ -16,31 +22,37 @@ public class Hauptfenster extends JFrame{
 
     static int y_position;
     static Getraenk aktuellesgetraenk;
+    static Snack aktuellersnack;
     static JPanel getraenkeliste;
     static Color coolcolour1;
     static Color coolcolour2;
     static Color coolcolour3;
+    static Color coolcolour4;
+    static String typ;
 
-    Hauptfenster(HashMap<String, Getraenk> getraenkemap){
+    Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap){
         //Deklarieren der Farben und Importen der Bilder
         y_position = 100;
         int colorpallet = 2;
+        typ = "getraenk";
 
         if(colorpallet == 1){
             coolcolour1 = new Color(210,190,255); //Create new Colour to be used, RGB value
             coolcolour2 = new Color(220,200,255); 
-            coolcolour3 = new Color(0, 0, 0);
+            coolcolour3 = new Color(0, 0, 0); //Schriftfarbe
+            coolcolour4 = new Color(230,190,255);
         }
         else if(colorpallet == 2){
             coolcolour1 = new Color(50,50,50);
             coolcolour2 = new Color(70,70,70); 
             coolcolour3 = new Color(255, 255, 255);
-
+            coolcolour4 = new Color(50, 50, 50);
         }
         else{
             coolcolour1 = new Color(160,160,160); 
             coolcolour2 = new Color(150,150,150); 
-            coolcolour3 = new Color(255, 255, 255);
+            coolcolour3 = new Color(0, 0, 0);
+            coolcolour4 = new Color(200, 200, 200);
         }
 
         int laenge = getraenkemap.size();
@@ -71,58 +83,79 @@ public class Hauptfenster extends JFrame{
         JPanel anzeige = new JPanel();
         anzeige.setPreferredSize(new Dimension(920, 680));
         anzeige.setSize(920, 680);
-        anzeige.setBackground(Color.white);
-
-        //Erstellen der Label
-        JLabel getraenkelistelabel = new JLabel(); //Creating a Label inside a frame 
-        getraenkelistelabel.setText("Getränkeliste"); //Setting the text for a Label
-        getraenkelistelabel.setForeground(Color.BLACK); //Changes the colour of the label
-        getraenkelistelabel.setFont(new Font("Arial", Font.PLAIN, 30)); //Set Font and Style of label text
-        getraenkelistelabel.setBounds(0, 0, 360, 80);
-        getraenkelistelabel.setHorizontalAlignment(JLabel.CENTER); //Sets Text and Image horizontal position in Label
-
+        anzeige.setBackground(coolcolour4);
 
         JScrollPane scrollbar = new JScrollPane(getraenkeliste);
         scrollbar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollbar.setBorder(BorderFactory.createEmptyBorder());
+        scrollbar.getVerticalScrollBar().setOpaque(false);
+        scrollbar.getVerticalScrollBar().setUnitIncrement(4);
+        scrollbar.setLayout(new ScrollPaneLayout(){
+            @Override
+            public void layoutContainer(Container parent) {
+              JScrollPane scrollPane = (JScrollPane) parent;
+      
+              Rectangle availR = scrollPane.getBounds();
+              availR.x = availR.y = 0;
+      
+              Rectangle vsbR = new Rectangle();
+              vsbR.width = 12;
+              vsbR.height = availR.height;
+              vsbR.x = availR.x + availR.width - vsbR.width;
+              vsbR.y = availR.y;
+      
+              if (viewport != null) {
+                viewport.setBounds(availR);
+              }
+            }
+          });
 
-
-
-
-        //Hinzufuegen der Button      
-        JButton getraenk2 = new JButton();
-        getraenk2.setBounds(80, 100, 200, 40);
-        getraenk2.addActionListener(e -> System.out.println("x"));
-
-        JLabel schließenlabel = new JLabel("Schließen");
-        schließenlabel.setForeground(coolcolour3);
-        schließenlabel.setFont(new Font("Arial", Font.PLAIN, 15));
-
+        //Hinzufuegen der Button
         JButton schließen = new JButton();
-        schließen.setBounds(1175, 0, 105, 40);
+        schließen.setBounds(1160, 0, 120, 40);
         schließen.addActionListener(e -> System.exit(0));
         schließen.setBackground(coolcolour2);
         schließen.setBorderPainted(false);
         schließen.setFocusPainted(false);
+        schließen.add(newlabel("Schließen"));
 
-        schließen.add(schließenlabel);
+        JButton getraenkeButton = new JButton();
+        getraenkeButton.setBounds(0, 0, 180, 40);
+        getraenkeButton.addActionListener(e -> reload());
+        getraenkeButton.setBackground(coolcolour2);
+        getraenkeButton.setBorderPainted(false);
+        getraenkeButton.setFocusPainted(false);
+        getraenkeButton.add(newlabel("Getränke"));
+
+        JButton snackButton = new JButton();
+        snackButton.setBounds(180, 0, 180, 40);
+        snackButton.addActionListener(e -> reload());
+        snackButton.setBackground(coolcolour2);
+        snackButton.setBorderPainted(false);
+        snackButton.setFocusPainted(false);
+        snackButton.add(newlabel("Snacks"));
         
         //Hinzufuegen der Komponenten zum Frame
         this.add(topbar ,BorderLayout.PAGE_START);       
         this.add(anzeige, BorderLayout.EAST);
         topbar.add(schließen);
+        topbar.add(getraenkeButton);
+        topbar.add(snackButton);
         this.add(scrollbar, BorderLayout.WEST); 
-        getraenkeliste.add(getraenkelistelabel);
-        getraenkemap.forEach((k,v) -> newbutton(y_position, k, v));
+        if(typ == "getraenk"){
+            getraenkeliste.add(titlelabel("Getränkeliste"));
+            getraenkemap.forEach((k,v) -> newgetraenk(y_position, k, v));
+        }
+        else{
+            getraenkeliste.add(titlelabel("Snackliste"));
+            snackmap.forEach((k,v) -> newsnack(y_position, k, v));
+        }
+
 
         this.setVisible(true); //Makes the Window Visible
     }
 
-    private static void newbutton(int y, String name, Getraenk getraenk){
-        JLabel buttonlabel = new JLabel(name);
-        buttonlabel.setForeground(coolcolour3);
-        buttonlabel.setFont(new Font("Arial", Font.PLAIN, 15));
-
+    private void newgetraenk(int y, String name, Getraenk getraenk){
         JButton button = new JButton();
         button.setBounds(60, y, 240, 50);
         button.addActionListener(e -> aktuellesgetraenk = getraenk);
@@ -130,8 +163,49 @@ public class Hauptfenster extends JFrame{
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         y_position = y_position + 80;
-        button.add(buttonlabel);
+        button.add(newlabel(name));
         getraenkeliste.add(button);
+    }
+
+    private void newsnack(int y, String name, Snack snack){
+        JButton button = new JButton();
+        button.setBounds(60, y, 240, 50);
+        button.addActionListener(e -> aktuellersnack = snack);
+        button.setBackground(coolcolour1);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        y_position = y_position + 80;
+        button.add(newlabel(name));
+        getraenkeliste.add(button);
+    }
+
+    private JLabel titlelabel(String text){
+        JLabel label = new JLabel(); //Creating a Label inside a frame 
+        label.setText(text); //Setting the text for a Label
+        label.setForeground(coolcolour3); //Changes the colour of the label
+        label.setFont(new Font("Arial", Font.PLAIN, 30)); //Set Font and Style of label text
+        label.setBounds(0, 0, 360, 80);
+        label.setHorizontalAlignment(JLabel.CENTER); //Sets Text and Image horizontal position in Label
+        return label;
+    }
+
+    private JLabel newlabel(String text){
+        JLabel label = new JLabel(text);
+        label.setForeground(coolcolour3);
+        label.setFont(new Font("Arial", Font.PLAIN, 15));
+        return label;
+    }
+
+    private void reload(){
+        if(typ == "getraenk"){
+            typ = "snack";
+        }
+        else{
+            typ = "getraenk";
+        }
+        this.invalidate();
+        this.revalidate();
+        this.repaint();
     }
 }
 

@@ -1,11 +1,9 @@
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Getraenkeverwaltung{
     public static void main(String[] args) {
 
         Kasse kasse1 = new Kasse(100);
-        int i = 0;
 
         // Erstelen der Map in der die Getraenke und Snack Objekte gespeichert werden.
         HashMap<String, Getraenk> getraenke = new HashMap<>();
@@ -27,7 +25,7 @@ public class Getraenkeverwaltung{
         snacks.put("Pringels", new Snack("Pringels", 3.99, 50));
         snacks.put("Popkorn", new Snack("Popkorn", 3.49, 10));
 
-        Hauptfenster hauptfenster = new Hauptfenster(getraenke);
+        Hauptfenster hauptfenster = new Hauptfenster(getraenke, snacks);
 
     }
 
