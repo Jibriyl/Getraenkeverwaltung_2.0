@@ -6,7 +6,8 @@ public class Getraenkeverwaltung{
     
         Hauptfenster hauptfenster = new Hauptfenster();
 
-
+        while(true){
+        }
 
     }
 
