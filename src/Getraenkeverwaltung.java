@@ -3,7 +3,7 @@ import java.util.HashMap;
 public class Getraenkeverwaltung{
     public static void main(String[] args) {
 
-        Kasse kasse1 = new Kasse(100);
+        Kasse kasse = new Kasse(100);
 
         // Erstelen der Map in der die Getraenke und Snack Objekte gespeichert werden.
         HashMap<String, Getraenk> getraenke = new HashMap<>();

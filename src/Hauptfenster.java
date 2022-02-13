@@ -12,23 +12,20 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Rectangle;
 import javax.swing.ScrollPaneLayout;
-import javax.swing.SwingUtilities;
-
-
-
-
 
 public class Hauptfenster extends JFrame{
 
-    static int y_position;
-    static Getraenk aktuellesgetraenk;
-    static Snack aktuellersnack;
-    static JPanel getraenkeliste;
-    static Color coolcolour1;
-    static Color coolcolour2;
-    static Color coolcolour3;
-    static Color coolcolour4;
-    static String typ;
+    int y_position;
+    Getraenk aktuellesgetraenk;
+    Snack aktuellersnack;
+    JPanel getraenkeliste;
+    JPanel snackliste;
+    Color coolcolour1;
+    Color coolcolour2;
+    Color coolcolour3;
+    Color coolcolour4;
+    Color coolcolour5;
+    String typ;
 
     Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap){
         //Deklarieren der Farben und Importen der Bilder
@@ -38,24 +35,27 @@ public class Hauptfenster extends JFrame{
 
         if(colorpallet == 1){
             coolcolour1 = new Color(210,190,255); //Create new Colour to be used, RGB value
-            coolcolour2 = new Color(220,200,255); 
+            coolcolour2 = new Color(220,200,255); //Getränkeiste Colour
             coolcolour3 = new Color(0, 0, 0); //Schriftfarbe
-            coolcolour4 = new Color(230,190,255);
+            coolcolour4 = new Color(230,190,255); //Background Anzeige
+            coolcolour5 = new Color(120,80,155); //Snackliste Colour
         }
         else if(colorpallet == 2){
             coolcolour1 = new Color(50,50,50);
-            coolcolour2 = new Color(70,70,70); 
+            coolcolour2 = new Color(80,80,80); 
             coolcolour3 = new Color(255, 255, 255);
             coolcolour4 = new Color(50, 50, 50);
+            coolcolour5 = new Color(60, 60, 60);
         }
         else{
             coolcolour1 = new Color(160,160,160); 
             coolcolour2 = new Color(150,150,150); 
             coolcolour3 = new Color(0, 0, 0);
             coolcolour4 = new Color(200, 200, 200);
+            coolcolour5 = new Color(130, 130, 130);
         }
 
-        int laenge = getraenkemap.size();
+        int laenge = Math.max(getraenkemap.size(), snackmap.size());
 
         //Frame Configureren
         this.setSize(1280,720); //Sets Frame Size x-dimension y-dimension
@@ -74,18 +74,32 @@ public class Hauptfenster extends JFrame{
         //topbar.setBounds(0, 0, 1280, 40); //Sets bounds like in the label axample
         topbar.setBackground(new Color(0,0,0,65));
         topbar.setLayout(null);
+        this.add(topbar ,BorderLayout.PAGE_START);       
+
+        JPanel scrollpanel = new JPanel();
+        scrollpanel.setPreferredSize(new Dimension(360,Math.max(100 + (laenge * 80), 680) ));
+        scrollpanel.setLayout(null);
 
         getraenkeliste = new JPanel();
-        getraenkeliste.setPreferredSize(new Dimension(360,Math.max(100 + (laenge * 80), 680) ));
+        getraenkeliste.setBounds(0, 0, 360, Math.max(100 + (laenge * 80), 680));
         getraenkeliste.setBackground(coolcolour2);
         getraenkeliste.setLayout(null);
+        scrollpanel.add(getraenkeliste);
+
+        snackliste = new JPanel();
+        snackliste.setBounds(0, 0, 360, Math.max(100 + (laenge * 80), 680));
+        snackliste.setBackground(coolcolour5);
+        snackliste.setLayout(null);
+        scrollpanel.add(snackliste);
+        snackliste.setVisible(false);
 
         JPanel anzeige = new JPanel();
         anzeige.setPreferredSize(new Dimension(920, 680));
         anzeige.setSize(920, 680);
         anzeige.setBackground(coolcolour4);
+        this.add(anzeige, BorderLayout.EAST);
 
-        JScrollPane scrollbar = new JScrollPane(getraenkeliste);
+        JScrollPane scrollbar = new JScrollPane(scrollpanel);
         scrollbar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollbar.setBorder(BorderFactory.createEmptyBorder());
         scrollbar.getVerticalScrollBar().setOpaque(false);
@@ -109,6 +123,7 @@ public class Hauptfenster extends JFrame{
               }
             }
           });
+        this.add(scrollbar, BorderLayout.WEST); 
 
         //Hinzufuegen der Button
         JButton schließen = new JButton();
@@ -121,7 +136,7 @@ public class Hauptfenster extends JFrame{
 
         JButton getraenkeButton = new JButton();
         getraenkeButton.setBounds(0, 0, 180, 40);
-        getraenkeButton.addActionListener(e -> reload());
+        getraenkeButton.addActionListener(e -> changegetraenk());
         getraenkeButton.setBackground(coolcolour2);
         getraenkeButton.setBorderPainted(false);
         getraenkeButton.setFocusPainted(false);
@@ -129,28 +144,23 @@ public class Hauptfenster extends JFrame{
 
         JButton snackButton = new JButton();
         snackButton.setBounds(180, 0, 180, 40);
-        snackButton.addActionListener(e -> reload());
-        snackButton.setBackground(coolcolour2);
+        snackButton.addActionListener(e -> changesnack());
+        snackButton.setBackground(coolcolour5);
         snackButton.setBorderPainted(false);
         snackButton.setFocusPainted(false);
         snackButton.add(newlabel("Snacks"));
         
         //Hinzufuegen der Komponenten zum Frame
-        this.add(topbar ,BorderLayout.PAGE_START);       
-        this.add(anzeige, BorderLayout.EAST);
         topbar.add(schließen);
         topbar.add(getraenkeButton);
         topbar.add(snackButton);
-        this.add(scrollbar, BorderLayout.WEST); 
-        if(typ == "getraenk"){
-            getraenkeliste.add(titlelabel("Getränkeliste"));
-            getraenkemap.forEach((k,v) -> newgetraenk(y_position, k, v));
-        }
-        else{
-            getraenkeliste.add(titlelabel("Snackliste"));
-            snackmap.forEach((k,v) -> newsnack(y_position, k, v));
-        }
+        
+        getraenkeliste.add(titlelabel("Getränkeliste"));
+        getraenkemap.forEach((k,v) -> newgetraenk(y_position, k, v));
 
+        y_position = 100;
+        snackliste.add(titlelabel("Snackliste"));
+        snackmap.forEach((k,v) -> newsnack(y_position, k, v));
 
         this.setVisible(true); //Makes the Window Visible
     }
@@ -176,7 +186,7 @@ public class Hauptfenster extends JFrame{
         button.setFocusPainted(false);
         y_position = y_position + 80;
         button.add(newlabel(name));
-        getraenkeliste.add(button);
+        snackliste.add(button);
     }
 
     private JLabel titlelabel(String text){
@@ -196,17 +206,17 @@ public class Hauptfenster extends JFrame{
         return label;
     }
 
-    private void reload(){
-        if(typ == "getraenk"){
-            typ = "snack";
-        }
-        else{
-            typ = "getraenk";
-        }
-        this.invalidate();
-        this.revalidate();
-        this.repaint();
+    private void changegetraenk(){
+        typ = "getraenk";
+        snackliste.setVisible(false);
+        getraenkeliste.setVisible(true);
     }
+    private void changesnack(){
+        typ = "snack";
+        snackliste.setVisible(true);
+        getraenkeliste.setVisible(false);
+    }
+
 }
 
 
