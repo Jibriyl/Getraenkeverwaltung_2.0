@@ -32,6 +32,7 @@ public class Hauptfenster extends JFrame{
     JLabel getraenkebestand;
     JLabel getraenkepreis;
     JLabel getraenkealkohol;
+    JPanel snackanzeige;
 
     Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap){
         //Deklarieren der Farben und Importen der Bilder
@@ -106,29 +107,26 @@ public class Hauptfenster extends JFrame{
         anzeige.setBackground(coolcolour4);
         this.add(anzeige, BorderLayout.EAST);
 
+        //Anzeige der Daten des Getraenkes
         getraenkeanzeige = new JPanel();
         getraenkeanzeige.setBounds(0, 0, 920, 640);
         getraenkeanzeige.setLayout(null);
         getraenkeanzeige.setBackground(coolcolour4);
         anzeige.add(getraenkeanzeige);
-
-        getraenkename = titlelabel("Name des Getränks: " + aktuellesgetraenk.getName());
-        getraenkename.setBounds(0, 60, 920, 60);
+        
+        getraenkename = new MyLabel(coolcolour3, "Name des Getränks: " + aktuellesgetraenk.getName(), 0, 60, 920, 60);
         getraenkeanzeige.add(getraenkename);
 
-        getraenkebestand = titlelabel("Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden");
-        getraenkebestand.setBounds(0, 180, 920, 60);
+        getraenkebestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden", 0, 180, 920, 60);
         getraenkeanzeige.add(getraenkebestand);
 
-        getraenkepreis = titlelabel("Preis: " + aktuellesgetraenk.getpreis() + "€");
-        getraenkepreis.setBounds(0, 300, 920, 60);
+        getraenkepreis = new MyLabel(coolcolour3, "Preis: " + aktuellesgetraenk.getpreis() + "€", 0, 300, 920, 60);
         getraenkeanzeige.add(getraenkepreis);
 
-        getraenkealkohol = titlelabel("Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%");
-        getraenkealkohol.setBounds(0, 420, 920, 60);
+        getraenkealkohol = new MyLabel(coolcolour3, "Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%", 0, 420, 920, 60);
         getraenkeanzeige.add(getraenkealkohol);
 
-        JPanel snackanzeige = new JPanel();
+        snackanzeige = new JPanel();
         snackanzeige.setBounds(0, 0, 920, 640);
         snackanzeige.setLayout(null);
         snackanzeige.setBackground(coolcolour4);
@@ -141,13 +139,8 @@ public class Hauptfenster extends JFrame{
         buttombar.setLayout(null);
         anzeige.add(buttombar);   
 
-        JButton verkaufen = new JButton();
-        verkaufen.setBounds(800, 0, 120, 40);
+        JButton verkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
         verkaufen.addActionListener(e -> System.exit(0));
-        verkaufen.setBackground(coolcolour2);
-        verkaufen.setBorderPainted(false);
-        verkaufen.setFocusPainted(false);
-        verkaufen.add(newlabel("Verkaufen"));
         buttombar.add(verkaufen);
 
         JScrollPane scrollbar = new JScrollPane(scrollpanel);
@@ -177,84 +170,43 @@ public class Hauptfenster extends JFrame{
         this.add(scrollbar, BorderLayout.WEST); 
 
         //Hinzufuegen der Button
-        JButton schließen = new JButton();
-        schließen.setBounds(1160, 0, 120, 40);
+
+        JButton schließen = new MyButton(coolcolour2, coolcolour3, "Schließen", 1160, 0, 120, 40);
         schließen.addActionListener(e -> System.exit(0));
-        schließen.setBackground(coolcolour2);
-        schließen.setBorderPainted(false);
-        schließen.setFocusPainted(false);
-        schließen.add(newlabel("Schließen"));
 
-        JButton getraenkeButton = new JButton();
-        getraenkeButton.setBounds(0, 0, 180, 40);
+        JButton getraenkeButton = new MyButton(coolcolour2, coolcolour3, "Getränke", 0, 0, 180, 40);
         getraenkeButton.addActionListener(e -> changegetraenk());
-        getraenkeButton.setBackground(coolcolour2);
-        getraenkeButton.setBorderPainted(false);
-        getraenkeButton.setFocusPainted(false);
-        getraenkeButton.add(newlabel("Getränke"));
 
-        JButton snackButton = new JButton();
-        snackButton.setBounds(180, 0, 180, 40);
+        JButton snackButton = new MyButton(coolcolour5, coolcolour3, "Snacks", 180, 0, 180, 40);
         snackButton.addActionListener(e -> changesnack());
-        snackButton.setBackground(coolcolour5);
-        snackButton.setBorderPainted(false);
-        snackButton.setFocusPainted(false);
-        snackButton.add(newlabel("Snacks"));
         
-        //Hinzufuegen der Komponenten zum Frame
+        //Hinzufuegen der Komponenten zur Topbar
         topbar.add(schließen);
         topbar.add(getraenkeButton);
         topbar.add(snackButton);
         
-        getraenkeliste.add(titlelabel("Getränkeliste"));
+        getraenkeliste.add(new MyLabel(coolcolour3, "Getränkeliste", 0, 0, 360, 80));
         getraenkemap.forEach((k,v) -> newgetraenk(y_position, k, v));
 
-        y_position = 100;
-        snackliste.add(titlelabel("Snackliste"));
+        y_position = 80;
+        snackliste.add(new MyLabel(coolcolour3, "Snackliste", 0, 0, 360, 80));
         snackmap.forEach((k,v) -> newsnack(y_position, k, v));
 
         this.setVisible(true); //Makes the Window Visible
     }
 
     private void newgetraenk(int y, String name, Getraenk getraenk){
-        JButton button = new JButton();
-        button.setBounds(60, y, 240, 50);
+        JButton button = new MyButton(coolcolour1, coolcolour3, name, 60, y, 240, 50);
         button.addActionListener(e -> changeanzeigegetraenk(getraenk));
-        button.setBackground(coolcolour1);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
         y_position = y_position + 80;
-        button.add(newlabel(name));
         getraenkeliste.add(button);
     }
 
     private void newsnack(int y, String name, Snack snack){
-        JButton button = new JButton();
-        button.setBounds(60, y, 240, 50);
+        JButton button = new MyButton(coolcolour1, coolcolour3, name, 60, y, 240, 50);
         button.addActionListener(e -> aktuellersnack = snack);
-        button.setBackground(coolcolour1);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
         y_position = y_position + 80;
-        button.add(newlabel(name));
         snackliste.add(button);
-    }
-
-    private JLabel titlelabel(String text){
-        JLabel label = new JLabel(); //Creating a Label inside a frame 
-        label.setText(text); //Setting the text for a Label
-        label.setForeground(coolcolour3); //Changes the colour of the label
-        label.setFont(new Font("Arial", Font.PLAIN, 30)); //Set Font and Style of label text
-        label.setBounds(0, 0, 360, 80);
-        label.setHorizontalAlignment(JLabel.CENTER); //Sets Text and Image horizontal position in Label
-        return label;
-    }
-
-    private JLabel newlabel(String text){
-        JLabel label = new JLabel(text);
-        label.setForeground(coolcolour3);
-        label.setFont(new Font("Arial", Font.PLAIN, 15));
-        return label;
     }
 
     private void changegetraenk(){
@@ -274,6 +226,13 @@ public class Hauptfenster extends JFrame{
         getraenkebestand.setText("Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden");
         getraenkepreis.setText("Preis: " + aktuellesgetraenk.getpreis() + "€");
         getraenkealkohol.setText("Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%");
+    }
+
+    private void changeanzeigesnack(Snack snack){
+        aktuellersnack = snack;
+        getraenkename.setText("Name des Getränks: " + aktuellersnack.getName());
+        getraenkebestand.setText("Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden");
+        getraenkepreis.setText("Preis: " + aktuellersnack.getpreis() + "€");
     }
 
 }
