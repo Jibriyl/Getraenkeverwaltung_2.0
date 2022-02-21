@@ -1,3 +1,5 @@
+package Getraenkehandel;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -221,7 +223,7 @@ public class Hauptfenster extends JFrame{
 
     private void newsnack(int y, String name, Snack snack){
         JButton button = new MyButton(coolcolour1, coolcolour3, name, 60, y, 240, 50);
-        button.addActionListener(e -> aktuellersnack = snack);
+        button.addActionListener(e -> changeanzeigesnack(snack));
         y_position = y_position + 80;
         snackliste.add(button);
     }
@@ -254,9 +256,9 @@ public class Hauptfenster extends JFrame{
 
     private void changeanzeigesnack(Snack snack){
         aktuellersnack = snack;
-        getraenkename.setText("Name des Getränks: " + aktuellersnack.getName());
-        getraenkebestand.setText("Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden");
-        getraenkepreis.setText("Preis: " + aktuellersnack.getpreis() + "€");
+        snackname.setText("Name des Getränks: " + aktuellersnack.getName());
+        snackbestand.setText("Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden");
+        snackpreis.setText("Preis: " + aktuellersnack.getpreis() + "€");
     }
 
 }

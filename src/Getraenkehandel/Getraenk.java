@@ -1,3 +1,5 @@
+package Getraenkehandel;
+
 import java.lang.String;
 
 public class Getraenk extends Produkt{

@@ -1,3 +1,5 @@
+package Getraenkehandel;
+
 import java.util.HashMap;
 
 public class Getraenkeverwaltung{

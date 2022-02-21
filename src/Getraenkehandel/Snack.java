@@ -1,3 +1,5 @@
+package Getraenkehandel;
+
 import java.lang.String;
 //Erbt genauso wie die Getraenke Klassen von der Produkt Klasse
 public class Snack extends Produkt{

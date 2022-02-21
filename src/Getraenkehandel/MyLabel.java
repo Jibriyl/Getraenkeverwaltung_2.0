@@ -1,3 +1,5 @@
+package Getraenkehandel;
+
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
