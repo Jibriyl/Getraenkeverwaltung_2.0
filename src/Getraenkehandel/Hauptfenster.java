@@ -22,11 +22,11 @@ public class Hauptfenster extends JFrame{
     JPanel getraenkeliste;
     JPanel getraenkeanzeige;
     JPanel snackliste;
-    Color coolcolour1;
-    Color coolcolour2;
+    static Color coolcolour1;
+    static Color coolcolour2;
     static Color coolcolour3;
-    Color coolcolour4;
-    Color coolcolour5;
+    static Color coolcolour4;
+    static Color coolcolour5;
     String typ;
 
     private JLabel getraenkename;
@@ -37,6 +37,7 @@ public class Hauptfenster extends JFrame{
     private MyLabel snackname;
     private MyLabel snackbestand;
     private MyLabel snackpreis;
+    private Verkaufsfenster kassenzettel;
 
     Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
         //Deklarieren der Farben und Importen der Bilder
@@ -159,7 +160,7 @@ public class Hauptfenster extends JFrame{
         anzeige.add(buttombar);   
 
         JButton verkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
-        verkaufen.addActionListener(e -> System.exit(0));
+        verkaufen.addActionListener(e -> kassenzettel = new Verkaufsfenster());
         buttombar.add(verkaufen);
 
         JScrollPane scrollbar = new JScrollPane(scrollpanel);
@@ -191,7 +192,7 @@ public class Hauptfenster extends JFrame{
         //Hinzufuegen der Button
 
         JButton schließen = new MyButton(coolcolour2, coolcolour3, "Schließen", 1160, 0, 120, 40);
-        schließen.addActionListener(e -> Verkaufsfenster kassenzettel = new Verkaufsfenster());
+        schließen.addActionListener(e -> System.exit(0));
 
         JButton getraenkeButton = new MyButton(coolcolour2, coolcolour3, "Getränke", 0, 0, 180, 40);
         getraenkeButton.addActionListener(e -> changegetraenk());
