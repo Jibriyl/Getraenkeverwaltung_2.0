@@ -8,6 +8,13 @@
             "type": "java",
             "name": "Launch Getraenkeverwaltung",
             "request": "launch",
+            "mainClass": "Getraenkehandel.Getraenkeverwaltung",
+            "projectName": "Getraenkeverwaltung_2.0_a1ba31a0"
+        },
+        {
+            "type": "java",
+            "name": "Launch Getraenkeverwaltung",
+            "request": "launch",
             "mainClass": "Getraenkeverwaltung",
             "projectName": "Getraenkeverwaltung_2.0_d1034bd3"
         },

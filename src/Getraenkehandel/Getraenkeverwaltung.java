@@ -27,7 +27,9 @@ public class Getraenkeverwaltung{
         snacks.put("Pringels", new Snack("Pringels", 3.99, 50));
         snacks.put("Popkorn", new Snack("Popkorn", 3.49, 10));
 
-        Hauptfenster hauptfenster = new Hauptfenster(getraenke, snacks);
+        Hauptfenster hauptfenster = new Hauptfenster(getraenke, snacks, kasse);
+        hauptfenster.setVisible(true); //Makes the Window Visible
+
 
     }
 
