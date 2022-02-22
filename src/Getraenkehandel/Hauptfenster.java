@@ -38,7 +38,6 @@ public class Hauptfenster extends JFrame{
     private MyLabel snackname;
     private MyLabel snackbestand;
     private MyLabel snackpreis;
-    private Verkaufsfenster kassenzettel;
 
     Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
         //Deklarieren der Farben und Importen der Bilder
@@ -125,16 +124,16 @@ public class Hauptfenster extends JFrame{
         getraenkeanzeige.setBackground(coolcolour4);
         anzeige.add(getraenkeanzeige);
         
-        getraenkename = new MyLabel(coolcolour3, "Name: " + aktuellesgetraenk.getName(), 0, 70, 920, 60);
+        getraenkename = new MyLabel(coolcolour3, "Name: " + aktuellesgetraenk.getName(), 30, 0, 70, 920, 60);
         getraenkeanzeige.add(getraenkename);
 
-        getraenkebestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden", 0, 210, 920, 60);
+        getraenkebestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden", 30, 0, 210, 920, 60);
         getraenkeanzeige.add(getraenkebestand);
 
-        getraenkepreis = new MyLabel(coolcolour3, "Preis: " + aktuellesgetraenk.getpreis() + "€", 0, 350, 920, 60);
+        getraenkepreis = new MyLabel(coolcolour3, "Preis: " + aktuellesgetraenk.getpreis() + "€", 30, 0, 350, 920, 60);
         getraenkeanzeige.add(getraenkepreis);
 
-        getraenkealkohol = new MyLabel(coolcolour3, "Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%", 0, 490, 920, 60);
+        getraenkealkohol = new MyLabel(coolcolour3, "Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%", 30, 0, 490, 920, 60);
         getraenkeanzeige.add(getraenkealkohol);
 
         //Snackanzeige
@@ -145,13 +144,13 @@ public class Hauptfenster extends JFrame{
         anzeige.add(snackanzeige);
         snackanzeige.setVisible(false);
 
-        snackname = new MyLabel(coolcolour3, "Name: " + aktuellersnack.getName(), 0, 100, 920, 60);
+        snackname = new MyLabel(coolcolour3, "Name: " + aktuellersnack.getName(), 30, 0, 100, 920, 60);
         snackanzeige.add(snackname);
 
-        snackbestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden", 0, 300, 920, 60);
+        snackbestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden", 30, 0, 300, 920, 60);
         snackanzeige.add(snackbestand);
 
-        snackpreis = new MyLabel(coolcolour3, "Preis: " + aktuellersnack.getpreis() + "€", 0, 500, 920, 60);
+        snackpreis = new MyLabel(coolcolour3, "Preis: " + aktuellersnack.getpreis() + "€", 30, 0, 500, 920, 60);
         snackanzeige.add(snackpreis);
 
         //Erstellen der Bottumleiste in dem das verkaufsfeld ist
@@ -162,7 +161,7 @@ public class Hauptfenster extends JFrame{
         anzeige.add(buttombar);   
 
         JButton verkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
-        verkaufen.addActionListener(e -> Verkaufsfenster.getreankverkaufen(aktuellesgetraenk));
+        verkaufen.addActionListener(e -> Verkaufsfenster.getreankverkaufen(aktuellesgetraenk, 5, coolcolour3, coolcolour5));
         buttombar.add(verkaufen);
 
         JScrollPane scrollbar = new JScrollPane(scrollpanel);
@@ -207,11 +206,11 @@ public class Hauptfenster extends JFrame{
         topbar.add(getraenkeButton);
         topbar.add(snackButton);
         
-        getraenkeliste.add(new MyLabel(coolcolour3, "Getränkeliste", 0, 0, 360, 80));
+        getraenkeliste.add(new MyLabel(coolcolour3, "Getränkeliste", 30, 0, 0, 360, 80));
         getraenkemap.forEach((k,v) -> newgetraenk(y_position, k, v));
 
         y_position = 80;
-        snackliste.add(new MyLabel(coolcolour3, "Snackliste", 0, 0, 360, 80));
+        snackliste.add(new MyLabel(coolcolour3, "Snackliste", 30, 0, 0, 360, 80));
         snackmap.forEach((k,v) -> newsnack(y_position, k, v));
     }
 
@@ -243,7 +242,6 @@ public class Hauptfenster extends JFrame{
         getraenkeliste.setVisible(false);
         snackanzeige.setVisible(true);
         getraenkeanzeige.setVisible(false);
-
     }
 
     private void changeanzeigegetraenk(Getraenk getraenk){

@@ -2,16 +2,21 @@ package Getraenkehandel;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import java.awt.Color;
+
 import java.awt.BorderLayout;
 
 public class Verkaufsfenster extends JFrame{
 
-    public Verkaufsfenster(int anzahl, String name, double preis){
+    private Verkaufsfenster(Color schriftcolour, Color coolcolour){
         this.setSize(240,360);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("Kassenzettel"); //Sets Title of Frame
         this.setResizable(false); //Prevents frame from being resized
-        this.getContentPane().setBackground(Hauptfenster.coolcolour3); //Change Colour of background
+        this.getContentPane().setBackground(schriftcolour); //Change Colour of background
         this.setLayout(new BorderLayout()); //Sets the Layoutmanager to null
         this.setUndecorated(true);
         this.setOpacity(0.98f);
@@ -21,14 +26,21 @@ public class Verkaufsfenster extends JFrame{
         bestaetigen.addActionListener(e -> this.dispose());
         this.add(bestaetigen, BorderLayout.PAGE_END);
 
-        this.setVisible(true);
-
     }
-    public static void getreankverkaufen(Getraenk getraenk){
-        Verkaufsfenster kassenzettel = new Verkaufsfenster(5, getraenk.getName(), getraenk.getpreis());
+
+    public static void getreankverkaufen(Getraenk getraenk, int menge, Color schriftcolour, Color coolcolour){
+        Verkaufsfenster kassenzettel = new Verkaufsfenster(schriftcolour, coolcolour);
+
+        JPanel anzeige = new JPanel();
+        kassenzettel.add(anzeige, BorderLayout.PAGE_START);
+
+
+        JLabel preis = new MyLabel(schriftcolour, "Name: " + getraenk.getName(), 20, 0, 30, 240, 50);
+        anzeige.add(preis);
+
         kassenzettel.setVisible(true);
+
         
 
     }
-
 }

@@ -8,7 +8,7 @@ public class MyButton extends JButton{
         this.setBackground(buttoncolour);
         this.setBorderPainted(false);
         this.setFocusPainted(false);
-        this.add(new MyLabel(schriftcolour, label));
+        this.add(new MyLabel(schriftcolour, label, 15));
     }
     
     public MyButton(Color buttoncolour, Color schriftcolour, String label, int x, int y, int width, int height){
@@ -16,6 +16,6 @@ public class MyButton extends JButton{
         this.setBorderPainted(false);
         this.setFocusPainted(false);
         this.setBounds(x, y, width, height);
-        this.add(new MyLabel(schriftcolour, label));
+        this.add(new MyLabel(schriftcolour, label, 15));
     }
 }
