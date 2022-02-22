@@ -47,17 +47,17 @@ public class Hauptfenster extends JFrame{
         typ = "getraenk";
         //Nimmt den Ersten eintrag aus dem am und setzt in als Startwert für die Anzeige
         HashMap.Entry<String,Getraenk> entry1 = getraenkemap.entrySet().iterator().next();
-        Getraenk aktuellesgetraenk = entry1.getValue();
+        aktuellesgetraenk = entry1.getValue();
 
         HashMap.Entry<String,Snack> entry2 = snackmap.entrySet().iterator().next();
-        Snack aktuellersnack = entry2.getValue();
+        aktuellersnack = entry2.getValue();
 
         if(colorpallet == 1){
-            coolcolour1 = new Color(210,190,255); //Create new Colour to be used, RGB value
-            coolcolour2 = new Color(220,200,255); //Getränkeiste Colour
-            coolcolour3 = new Color(0, 0, 0); //Schriftfarbe
-            coolcolour4 = new Color(230,190,255); //Background Anzeige
-            coolcolour5 = new Color(120,80,155); //Snackliste Colour
+            coolcolour1 = new Color(210,190,255); 
+            coolcolour2 = new Color(220,200,255);
+            coolcolour3 = new Color(0, 0, 0);
+            coolcolour4 = new Color(230,190,255); 
+            coolcolour5 = new Color(120,80,155);
         }
         else if(colorpallet == 2){
             coolcolour1 = new Color(50,50,50);
@@ -77,133 +77,108 @@ public class Hauptfenster extends JFrame{
         int laenge = Math.max(getraenkemap.size(), snackmap.size());
 
         //Frame Configureren
-        this.setSize(1280,720); //Sets Frame Size x-dimension y-dimension
-        this.setTitle("Getränkeverwaltung"); //Sets Title of Frame
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Closes the application on close / Default is only hiding it
-        this.setResizable(false); //Prevents frame from being resized
-        this.getContentPane().setBackground(coolcolour1); //Change Colour of background
-        this.setLayout(new BorderLayout()); //Sets the Layoutmanager to null
+        this.setSize(1280,720);
+        this.setTitle("Getränkeverwaltung");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.getContentPane().setBackground(coolcolour1);
+        this.setLayout(new BorderLayout());
         this.setUndecorated(true);
         this.setOpacity(0.98f);
         this.setLocationRelativeTo(null); //Setzt das Fenster in die mitte des Bildschirms
 
         //Erstellen der Panel
-        JPanel topbar = new JPanel(); //Creats a new Panel 
-        topbar.setPreferredSize(new Dimension(1280, 40));
-        topbar.setBackground(coolcolour1);
-        topbar.setLayout(null);
+        JPanel topbar = new MyPanel(coolcolour1, 1280, 40);
         this.add(topbar ,BorderLayout.PAGE_START);        
 
-        JPanel scrollpanel = new JPanel();
-        scrollpanel.setPreferredSize(new Dimension(360,Math.max(100 + (laenge * 80), 680) ));
-        scrollpanel.setLayout(null);
+        //Erstellend des Scrollpanels was in die Scroll hinzugefügt werden soll, mit berechnung der benötigten länge anhand der Anzahl an Getränken/Snacks
+        JPanel scrollpanel = new MyPanel(coolcolour1, 360, Math.max(100 + (laenge * 80), 680));
 
-        getraenkeliste = new JPanel();
-        getraenkeliste.setBounds(0, 0, 360, Math.max(100 + (laenge * 80), 680));
-        getraenkeliste.setBackground(coolcolour2);
-        getraenkeliste.setLayout(null);
-        scrollpanel.add(getraenkeliste);
-
-        snackliste = new JPanel();
-        snackliste.setBounds(0, 0, 360, Math.max(100 + (laenge * 80), 680));
-        snackliste.setBackground(coolcolour5);
-        snackliste.setLayout(null);
-        scrollpanel.add(snackliste);
-        snackliste.setVisible(false);
-
-        JPanel anzeige = new JPanel();
-        anzeige.setPreferredSize(new Dimension(920, 680));
-        anzeige.setLayout(null);
-        anzeige.setBackground(coolcolour4);
-        this.add(anzeige, BorderLayout.EAST);
-
-        //Anzeige der Daten des Getraenkes
-        getraenkeanzeige = new JPanel();
-        getraenkeanzeige.setBounds(0, 0, 920, 640);
-        getraenkeanzeige.setLayout(null);
-        getraenkeanzeige.setBackground(coolcolour4);
-        anzeige.add(getraenkeanzeige);
-        
-        getraenkename = new MyLabel(coolcolour3, "Name: " + aktuellesgetraenk.getName(), 30, 0, 70, 920, 60);
-        getraenkeanzeige.add(getraenkename);
-
-        getraenkebestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden", 30, 0, 210, 920, 60);
-        getraenkeanzeige.add(getraenkebestand);
-
-        getraenkepreis = new MyLabel(coolcolour3, "Preis: " + aktuellesgetraenk.getpreis() + "€", 30, 0, 350, 920, 60);
-        getraenkeanzeige.add(getraenkepreis);
-
-        getraenkealkohol = new MyLabel(coolcolour3, "Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%", 30, 0, 490, 920, 60);
-        getraenkeanzeige.add(getraenkealkohol);
-
-        //Snackanzeige
-        snackanzeige = new JPanel();
-        snackanzeige.setBounds(0, 0, 920, 640);
-        snackanzeige.setLayout(null);
-        snackanzeige.setBackground(coolcolour4);
-        anzeige.add(snackanzeige);
-        snackanzeige.setVisible(false);
-
-        snackname = new MyLabel(coolcolour3, "Name: " + aktuellersnack.getName(), 30, 0, 100, 920, 60);
-        snackanzeige.add(snackname);
-
-        snackbestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden", 30, 0, 300, 920, 60);
-        snackanzeige.add(snackbestand);
-
-        snackpreis = new MyLabel(coolcolour3, "Preis: " + aktuellersnack.getpreis() + "€", 30, 0, 500, 920, 60);
-        snackanzeige.add(snackpreis);
-
-        //Erstellen der Bottumleiste in dem das verkaufsfeld ist
-        JPanel buttombar = new JPanel();
-        buttombar.setBounds(0, 640, 920, 40);
-        buttombar.setBackground(coolcolour1);
-        buttombar.setLayout(null);
-        anzeige.add(buttombar);   
-
-        JButton verkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
-        verkaufen.addActionListener(e -> Verkaufsfenster.getreankverkaufen(aktuellesgetraenk, 5, coolcolour3, coolcolour5));
-        buttombar.add(verkaufen);
-
+        //Erstellen der Scrollbar für die getränke und snacks
         JScrollPane scrollbar = new JScrollPane(scrollpanel);
         scrollbar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollbar.setBorder(BorderFactory.createEmptyBorder());
         scrollbar.getVerticalScrollBar().setOpaque(false);
         scrollbar.getVerticalScrollBar().setUnitIncrement(4);
+        //Unsichtbar machen der Scrollbar ohne die Funktion zu beeinflussen
         scrollbar.setLayout(new ScrollPaneLayout(){
             @Override
             public void layoutContainer(Container parent) {
-              JScrollPane scrollPane = (JScrollPane) parent;
-      
-              Rectangle availR = scrollPane.getBounds();
-              availR.x = availR.y = 0;
-      
-              Rectangle vsbR = new Rectangle();
-              vsbR.width = 12;
-              vsbR.height = availR.height;
-              vsbR.x = availR.x + availR.width - vsbR.width;
-              vsbR.y = availR.y;
-      
-              if (viewport != null) {
+                JScrollPane scrollPane = (JScrollPane) parent;
+        
+                Rectangle availR = scrollPane.getBounds();
+                availR.x = availR.y = 0;
+        
+                Rectangle vsbR = new Rectangle();
+                vsbR.width = 12;
+                vsbR.height = availR.height;
+                vsbR.x = availR.x + availR.width - vsbR.width;
+                vsbR.y = availR.y;
+        
+                if (viewport != null) {
                 viewport.setBounds(availR);
-              }
+                }
             }
-          });
+            });
         this.add(scrollbar, BorderLayout.WEST); 
+        
 
-        //Hinzufuegen der Button
+        getraenkeliste = new MyPanel(coolcolour2, 0, 0, 360, Math.max(100 + (laenge * 80), 680));
+        scrollpanel.add(getraenkeliste);
 
+        snackliste = new MyPanel(coolcolour5, 0, 0, 360, Math.max(100 + (laenge * 80), 680));
+        snackliste.setVisible(false);
+        scrollpanel.add(snackliste);
+
+        JPanel anzeige = new MyPanel(coolcolour4, 920, 680);
+        this.add(anzeige, BorderLayout.EAST);
+
+        //Anzeige der Daten des Getraenkes
+        anzeige.add(getraenkeanzeige = new MyPanel(coolcolour4, 0, 0, 920, 680));
+        //Erstellen der Label für die Getränke, werden direkt in der getränkeanzeige add methode erstellt
+        getraenkeanzeige.add(getraenkename = new MyLabel(coolcolour3, "Name: " + aktuellesgetraenk.getName(), 30, 0, 70, 920, 60));
+        getraenkeanzeige.add(getraenkebestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden", 30, 0, 210, 920, 60));
+        getraenkeanzeige.add(getraenkepreis = new MyLabel(coolcolour3, "Preis: " + aktuellesgetraenk.getpreis() + "€", 30, 0, 350, 920, 60));
+        getraenkeanzeige.add(getraenkealkohol = new MyLabel(coolcolour3, "Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%", 30, 0, 490, 920, 60));
+
+        //Snackanzeige
+        snackanzeige = new MyPanel(coolcolour4, 0, 0, 920, 680);
+        snackanzeige.setVisible(false);
+        anzeige.add(snackanzeige);
+        
+        //Erstellen der Snack Label
+        snackanzeige.add(snackname = new MyLabel(coolcolour3, "Name: " + aktuellersnack.getName(), 30, 0, 100, 920, 60));
+        snackanzeige.add(snackbestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden", 30, 0, 300, 920, 60));
+        snackanzeige.add(snackpreis = new MyLabel(coolcolour3, "Preis: " + aktuellersnack.getpreis() + "€", 30, 0, 500, 920, 60));
+
+        //Erstellen der Bottumleiste für die Getränke, in dem das verkaufsfeld ist. Die Buttomleiste wird für getränke und snack getrennt da je nachdem ob
+        //Getränke oder Snacks aufgerufen werdem müssen verschiedene Methoden für den verkauf benutzt werden müssen. 
+        JPanel buttombargetraenke = new MyPanel(coolcolour1, 0, 640, 920, 40);
+        getraenkeanzeige.add(buttombargetraenke);   
+        //Getränke Verkaufsbutton
+        JButton getraenkverkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
+        getraenkverkaufen.addActionListener(e -> Verkaufsfenster.getreankverkaufen(aktuellesgetraenk, 10, coolcolour3, coolcolour5));
+        buttombargetraenke.add(getraenkverkaufen);
+
+        //Erstellen der Buttomleiste für die Snacks
+        JPanel buttombarsnack = new MyPanel(coolcolour1, 0, 640, 920, 40);
+        snackanzeige.add(buttombarsnack);   
+        //Snack Verkaufsbutton
+        JButton snackverkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
+        snackverkaufen.addActionListener(e -> Verkaufsfenster.snackverkaufen(aktuellersnack, 10, coolcolour3, coolcolour5));
+        buttombarsnack.add(snackverkaufen);
+
+        //Hinzufuegen des Button zum schließen des Programms
         JButton schließen = new MyButton(coolcolour2, coolcolour3, "Schließen", 1160, 0, 120, 40);
         schließen.addActionListener(e -> System.exit(0));
+        topbar.add(schließen);
 
         JButton getraenkeButton = new MyButton(coolcolour2, coolcolour3, "Getränke", 0, 0, 180, 40);
         getraenkeButton.addActionListener(e -> changegetraenk());
+        topbar.add(getraenkeButton);
 
         JButton snackButton = new MyButton(coolcolour5, coolcolour3, "Snacks", 180, 0, 180, 40);
         snackButton.addActionListener(e -> changesnack());
-        
-        //Hinzufuegen der Komponenten zur Topbar
-        topbar.add(schließen);
-        topbar.add(getraenkeButton);
         topbar.add(snackButton);
         
         getraenkeliste.add(new MyLabel(coolcolour3, "Getränkeliste", 30, 0, 0, 360, 80));
