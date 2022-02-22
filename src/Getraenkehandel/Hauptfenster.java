@@ -22,11 +22,11 @@ public class Hauptfenster extends JFrame{
     JPanel getraenkeliste;
     JPanel getraenkeanzeige;
     JPanel snackliste;
-    Color coolcolour1;
-    Color coolcolour2;
+    static Color coolcolour1;
+    static Color coolcolour2;
     static Color coolcolour3;
-    Color coolcolour4;
-    Color coolcolour5;
+    static Color coolcolour4;
+    static Color coolcolour5;
     String typ;
     Kasse kasse;
 
@@ -38,6 +38,7 @@ public class Hauptfenster extends JFrame{
     private MyLabel snackname;
     private MyLabel snackbestand;
     private MyLabel snackpreis;
+    private Verkaufsfenster kassenzettel;
 
     Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
         //Deklarieren der Farben und Importen der Bilder
@@ -235,7 +236,7 @@ public class Hauptfenster extends JFrame{
         snackanzeige.setVisible(false);
         getraenkeanzeige.setVisible(true);
     }
-    
+
     private void changesnack(){
         typ = "snack";
         snackliste.setVisible(true);

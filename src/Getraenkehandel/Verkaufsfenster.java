@@ -1,5 +1,6 @@
 package Getraenkehandel;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 
@@ -15,6 +16,13 @@ public class Verkaufsfenster extends JFrame{
         this.setUndecorated(true);
         this.setOpacity(0.98f);
         this.setLocationRelativeTo(null); //Setzt das Fenster in die mitte des Bildschirms
+
+        JButton bestaetigen = new MyButton(Hauptfenster.coolcolour5, Hauptfenster.coolcolour3, "OK");
+        bestaetigen.addActionListener(e -> this.dispose());
+        this.add(bestaetigen, BorderLayout.PAGE_END);
+
+        this.setVisible(true);
+
     }
     public static void getreankverkaufen(Getraenk getraenk){
         Verkaufsfenster kassenzettel = new Verkaufsfenster(5, getraenk.getName(), getraenk.getpreis());

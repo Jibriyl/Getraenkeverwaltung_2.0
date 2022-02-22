@@ -13,13 +13,17 @@ public class Getraenkeverwaltung{
 
         // Hinzufügen der Getraenke mit Konstuktor
         getraenke.put("Fanta", new Getraenk("Fanta", 3, 30, 0));
-        getraenke.put("Cola", new Getraenk("Cola", 3.99, 50, 0));
-        getraenke.put("Cola Light", new Getraenk("Cola Light", 3.99, 50, 0));
+        getraenke.put("Cola", new Getraenk("Cola", 2.99, 50, 0));
+        getraenke.put("Cola Zero", new Getraenk("Cola Zero", 2.99, 20, 0));
+        getraenke.put("Cola Light", new Getraenk("Cola Light", 2.99, 10, 0));
         getraenke.put("Vodka", new Getraenk("Vodka", 5, 30, 40));
-        getraenke.put("Tomatensaft", new Getraenk("Tomatensaft", 1, 50000, 0));
+        getraenke.put("Tomatensaft", new Getraenk("Tomatensaft", 1, 5, 0));
         getraenke.put("WhiteRussen", new Getraenk("WhiteRussian", 0.49, 40, 35));
         getraenke.put("Fritz", new Getraenk("Fritz", 2, 50, 0));
         getraenke.put("Effekt", new Getraenk("Effekt", 1, 10, 0));
+        getraenke.put("Effekt Zero", new Getraenk("Effekt Zero", 1, 10, 0));
+
+
 
         // Hinzufügen der Snacks mit Konstruktor
         snacks.put("Chips", new Snack("Chips", 1.99, 100));
