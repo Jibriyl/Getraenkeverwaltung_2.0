@@ -5,8 +5,8 @@ import java.awt.BorderLayout;
 
 public class Verkaufsfenster extends JFrame{
 
-    public Verkaufsfenster(){
-        this.setSize(360,240);
+    public Verkaufsfenster(int anzahl, String name, double preis){
+        this.setSize(240,360);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("Kassenzettel"); //Sets Title of Frame
         this.setResizable(false); //Prevents frame from being resized
@@ -15,6 +15,12 @@ public class Verkaufsfenster extends JFrame{
         this.setUndecorated(true);
         this.setOpacity(0.98f);
         this.setLocationRelativeTo(null); //Setzt das Fenster in die mitte des Bildschirms
+    }
+    public static void getreankverkaufen(Getraenk getraenk){
+        Verkaufsfenster kassenzettel = new Verkaufsfenster(5, getraenk.getName(), getraenk.getpreis());
+        kassenzettel.setVisible(true);
+        
+
     }
 
 }

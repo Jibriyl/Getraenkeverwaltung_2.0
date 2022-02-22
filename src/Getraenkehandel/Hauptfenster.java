@@ -28,6 +28,7 @@ public class Hauptfenster extends JFrame{
     Color coolcolour4;
     Color coolcolour5;
     String typ;
+    Kasse kasse;
 
     private JLabel getraenkename;
     private JLabel getraenkebestand;
@@ -40,6 +41,7 @@ public class Hauptfenster extends JFrame{
 
     Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
         //Deklarieren der Farben und Importen der Bilder
+        this.kasse = kasse;
         y_position = 80;
         int colorpallet = 2;
         typ = "getraenk";
@@ -159,7 +161,7 @@ public class Hauptfenster extends JFrame{
         anzeige.add(buttombar);   
 
         JButton verkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
-        verkaufen.addActionListener(e -> System.exit(0));
+        verkaufen.addActionListener(e -> Verkaufsfenster.getreankverkaufen(aktuellesgetraenk));
         buttombar.add(verkaufen);
 
         JScrollPane scrollbar = new JScrollPane(scrollpanel);
@@ -191,7 +193,7 @@ public class Hauptfenster extends JFrame{
         //Hinzufuegen der Button
 
         JButton schließen = new MyButton(coolcolour2, coolcolour3, "Schließen", 1160, 0, 120, 40);
-        schließen.addActionListener(e -> Verkaufsfenster kassenzettel = new Verkaufsfenster());
+        schließen.addActionListener(e -> System.exit(0));
 
         JButton getraenkeButton = new MyButton(coolcolour2, coolcolour3, "Getränke", 0, 0, 180, 40);
         getraenkeButton.addActionListener(e -> changegetraenk());
@@ -232,9 +234,8 @@ public class Hauptfenster extends JFrame{
         getraenkeliste.setVisible(true);
         snackanzeige.setVisible(false);
         getraenkeanzeige.setVisible(true);
-
-
     }
+    
     private void changesnack(){
         typ = "snack";
         snackliste.setVisible(true);
@@ -258,7 +259,6 @@ public class Hauptfenster extends JFrame{
         snackbestand.setText("Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden");
         snackpreis.setText("Preis: " + aktuellersnack.getpreis() + "€");
     }
-
 }
 
 
