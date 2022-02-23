@@ -30,7 +30,7 @@ public class Verkaufsfenster extends JFrame{
 
     }
 
-    public static void getreankverkaufen(Getraenk getraenk, int menge, Color schriftcolour, Color coolcolour){
+    public static void getreankverkaufen(Getraenk getraenk, int menge, Color schriftcolour, Color coolcolour, Kasse kasse){
         Verkaufsfenster kassenzettel = new Verkaufsfenster(schriftcolour, coolcolour);
 
         JPanel anzeige = new JPanel();
@@ -40,15 +40,19 @@ public class Verkaufsfenster extends JFrame{
         kassenzettel.add(anzeige, BorderLayout.PAGE_START);
 
         if(getraenk.bestandabfrage(menge)){
+            double gesamtpreis = getraenk.verkaufen(menge);
+            kasse.verkauf(gesamtpreis);
+
             JLabel preis = new MyLabel(schriftcolour, "Name: " + getraenk.getName(), 20, 0, 50, 240, 50);
             JLabel verkaufsmenge = new MyLabel(schriftcolour, "Verkaufsmenge: " + menge, 20, 0, 110, 240, 50);
             JLabel verkaufspreis = new MyLabel(schriftcolour, "Verkaufspreis " + getraenk.getpreis() + "€", 20, 0, 170, 240, 50);
-            JLabel gesamtpreis = new MyLabel(schriftcolour, "Gesamtpreis: " + runden.format(getraenk.verkaufen(menge)) + "€", 20, 0, 230, 240, 50);
+            JLabel gesamtpreisanzeige = new MyLabel(schriftcolour, "Gesamtpreis: " + runden.format(gesamtpreis) + "€", 20, 0, 230, 240, 50);
     
             anzeige.add(preis);
             anzeige.add(verkaufspreis);
-            anzeige.add(gesamtpreis);
+            anzeige.add(gesamtpreisanzeige);
             anzeige.add(verkaufsmenge);
+            
         }
         else{
             kassenzettel.setSize(600,120);
@@ -59,7 +63,7 @@ public class Verkaufsfenster extends JFrame{
         kassenzettel.setVisible(true);
     }
 
-    public static void snackverkaufen(Snack snack, int menge, Color schriftcolour, Color coolcolour){
+    public static void snackverkaufen(Snack snack, int menge, Color schriftcolour, Color coolcolour, Kasse kasse){
         Verkaufsfenster kassenzettel = new Verkaufsfenster(schriftcolour, coolcolour);
 
         JPanel anzeige = new JPanel();
@@ -69,14 +73,17 @@ public class Verkaufsfenster extends JFrame{
         kassenzettel.add(anzeige, BorderLayout.PAGE_START);
 
         if(snack.bestandabfrage(menge)){
+            double gesamtpreis = snack.verkaufen(menge);
+            kasse.verkauf(gesamtpreis);
+
             JLabel preis = new MyLabel(schriftcolour, "Name: " + snack.getName(), 20, 0, 50, 240, 50);
             JLabel verkaufsmenge = new MyLabel(schriftcolour, "Verkaufsmenge: " + menge, 20, 0, 110, 240, 50);
             JLabel verkaufspreis = new MyLabel(schriftcolour, "Verkaufspreis " + snack.getpreis() + "€", 20, 0, 170, 240, 50);
-            JLabel gesamtpreis = new MyLabel(schriftcolour, "Gesamtpreis: " + runden.format(snack.verkaufen(menge)) + "€", 20, 0, 230, 240, 50);
+            JLabel gesamtpreisanzeige = new MyLabel(schriftcolour, "Gesamtpreis: " + runden.format(gesamtpreis) + "€", 20, 0, 230, 240, 50);
     
             anzeige.add(preis);
             anzeige.add(verkaufspreis);
-            anzeige.add(gesamtpreis);
+            anzeige.add(gesamtpreisanzeige);
             anzeige.add(verkaufsmenge);
         }
         else{

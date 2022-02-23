@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.util.HashMap;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -157,7 +156,7 @@ public class Hauptfenster extends JFrame{
         getraenkeanzeige.add(buttombargetraenke);   
         //Getränke Verkaufsbutton
         JButton getraenkverkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
-        getraenkverkaufen.addActionListener(e -> Verkaufsfenster.getreankverkaufen(aktuellesgetraenk, 10, coolcolour3, coolcolour5));
+        getraenkverkaufen.addActionListener(e -> Verkaufsfenster.getreankverkaufen(aktuellesgetraenk, 10, coolcolour3, coolcolour5, kasse));
         buttombargetraenke.add(getraenkverkaufen);
 
         //Erstellen der Buttomleiste für die Snacks
@@ -165,7 +164,7 @@ public class Hauptfenster extends JFrame{
         snackanzeige.add(buttombarsnack);   
         //Snack Verkaufsbutton
         JButton snackverkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
-        snackverkaufen.addActionListener(e -> Verkaufsfenster.snackverkaufen(aktuellersnack, 10, coolcolour3, coolcolour5));
+        snackverkaufen.addActionListener(e -> Verkaufsfenster.snackverkaufen(aktuellersnack, 10, coolcolour3, coolcolour5, kasse));
         buttombarsnack.add(snackverkaufen);
 
         //Hinzufuegen des Button zum schließen des Programms
@@ -209,6 +208,7 @@ public class Hauptfenster extends JFrame{
         getraenkeliste.setVisible(true);
         snackanzeige.setVisible(false);
         getraenkeanzeige.setVisible(true);
+        System.out.println(kasse.getkassenstand());
     }
 
     private void changesnack(){
