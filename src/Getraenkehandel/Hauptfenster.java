@@ -21,11 +21,11 @@ public class Hauptfenster extends JFrame{
     JPanel getraenkeliste;
     JPanel getraenkeanzeige;
     JPanel snackliste;
-    static Color coolcolour1;
-    static Color coolcolour2;
-    static Color coolcolour3;
-    static Color coolcolour4;
-    static Color coolcolour5;
+    Color coolcolour1;
+    Color coolcolour2;
+    Color coolcolour3;
+    Color coolcolour4;
+    Color coolcolour5;
     String typ;
     Kasse kasse;
 
@@ -84,7 +84,7 @@ public class Hauptfenster extends JFrame{
         this.setLayout(new BorderLayout());
         this.setUndecorated(true);
         this.setOpacity(0.98f);
-        this.setLocationRelativeTo(null); //Setzt das Fenster in die mitte des Bildschirms
+        this.setLocationRelativeTo(null);
 
         //Erstellen der Panel
         JPanel topbar = new MyPanel(coolcolour1, 1280, 40);
@@ -172,18 +172,23 @@ public class Hauptfenster extends JFrame{
         schließen.addActionListener(e -> System.exit(0));
         topbar.add(schließen);
 
+        //Hinzufuegen des Button zum auswählen des Getränkeliste
         JButton getraenkeButton = new MyButton(coolcolour2, coolcolour3, "Getränke", 0, 0, 180, 40);
         getraenkeButton.addActionListener(e -> changegetraenk());
         topbar.add(getraenkeButton);
 
+        //Hinzufuegen des Button zum auswählen der Snackliste
         JButton snackButton = new MyButton(coolcolour5, coolcolour3, "Snacks", 180, 0, 180, 40);
         snackButton.addActionListener(e -> changesnack());
         topbar.add(snackButton);
         
+        //Erstellen der Getränkeliste indem zuerst die überschrift und anschließend die Buttons für die Getränke eingefügt werden
         getraenkeliste.add(new MyLabel(coolcolour3, "Getränkeliste", 30, 0, 0, 360, 80));
         getraenkemap.forEach((k,v) -> newgetraenk(y_position, k, v));
 
+        //Zurücksetzen der position an der, der erste button positioniert wird
         y_position = 80;
+        //Erstellen der Snackliste indem zuerst die überschrift und anschließend die Buttons für die Snacks eingefügt werden
         snackliste.add(new MyLabel(coolcolour3, "Snackliste", 30, 0, 0, 360, 80));
         snackmap.forEach((k,v) -> newsnack(y_position, k, v));
     }

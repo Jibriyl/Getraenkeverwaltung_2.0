@@ -27,7 +27,6 @@ public class Verkaufsfenster extends JFrame{
         JButton bestaetigen = new MyButton(coolcolour, schriftcolour, "OK");
         bestaetigen.addActionListener(e -> this.dispose());
         this.add(bestaetigen, BorderLayout.PAGE_END);
-
     }
 
     public static void getreankverkaufen(Getraenk getraenk, int menge, Color schriftcolour, Color coolcolour, Kasse kasse){
