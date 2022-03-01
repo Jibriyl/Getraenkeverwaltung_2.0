@@ -1,4 +1,4 @@
-package Getraenkehandel;
+package Getraenkehandel.guiklassen;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,6 +12,10 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Rectangle;
 import javax.swing.ScrollPaneLayout;
+
+import Getraenkehandel.Getraenk;
+import Getraenkehandel.Kasse;
+import Getraenkehandel.Snack;
 
 public class Hauptfenster extends JFrame{
 
@@ -38,7 +42,7 @@ public class Hauptfenster extends JFrame{
     private MyLabel snackbestand;
     private MyLabel snackpreis;
 
-    Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
+    public Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
         //Deklarieren der Farben und Importen der Bilder
         this.kasse = kasse;
         y_position = 80;

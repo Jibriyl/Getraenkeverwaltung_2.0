@@ -1,9 +1,13 @@
-package Getraenkehandel;
+package Getraenkehandel.guiklassen;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import Getraenkehandel.Getraenk;
+import Getraenkehandel.Kasse;
+import Getraenkehandel.Snack;
 
 import java.awt.Color;
 import java.awt.Dimension;

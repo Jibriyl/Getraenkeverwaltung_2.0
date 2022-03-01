@@ -1,6 +1,6 @@
 package Getraenkehandel;
 
-class Kasse {
+public class Kasse {
     private double kassenstand;
 
     //Kassen klasse, speichern, verringern, erhoehen Kassenstand

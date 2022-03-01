@@ -1,4 +1,4 @@
-package Getraenkehandel;
+package Getraenkehandel.guiklassen;
 
 import javax.swing.JLabel;
 import java.awt.Color;
