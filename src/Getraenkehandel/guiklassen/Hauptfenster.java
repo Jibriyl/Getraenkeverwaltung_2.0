@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneLayout;
+import javax.swing.SpringLayout;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import Getraenkehandel.Snack;
 public class Hauptfenster extends JFrame implements ActionListener{
 
     int y_position;
-    int y_position_warenkeorb;
     Getraenk aktuellesgetraenk;
     Snack aktuellersnack;
     JPanel getraenkeliste;
@@ -60,11 +60,13 @@ public class Hauptfenster extends JFrame implements ActionListener{
     public Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
         //Deklarieren der Farben und Importen der Bilder
         this.kasse = kasse;
+        //Bestimmt die position der Button für getränke und snack liste
         y_position = 80;
-        y_position_warenkeorb = 20 ;
+        //Legt fest welches colourpallet genutzt wird
         int colorpallet = 2;
+        //Platzthalter variable für auswahl was angezeigt werden soll
         typ = "getraenk";
-        //Nimmt den Ersten eintrag aus dem am und setzt in als Startwert für die Anzeige
+        //Nimmt den Ersten eintrag aus den Maps und setzt in als Startwert für die Anzeige
         HashMap.Entry<String,Getraenk> entry1 = getraenkemap.entrySet().iterator().next();
         aktuellesgetraenk = entry1.getValue();
 
@@ -74,6 +76,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
         //Erstellen des Warenkorbs
         warenkorb = new HashMap<>();
 
+        //Festlegen der Colourpallets
         if(colorpallet == 1){
             coolcolour1 = new Color(210,190,255); 
             coolcolour2 = new Color(220,200,255);
@@ -96,6 +99,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
             coolcolour5 = new Color(130, 130, 130);
         }
 
+        //Bestimmt den höheren Wert für die Scrollpane
         int laenge = Math.max(getraenkemap.size(), snackmap.size());
 
         //Frame Configureren
@@ -127,21 +131,11 @@ public class Hauptfenster extends JFrame implements ActionListener{
             @Override
             public void layoutContainer(Container parent) {
                 JScrollPane scrollPane = (JScrollPane) parent;
-        
                 Rectangle availR = scrollPane.getBounds();
                 availR.x = availR.y = 0;
-        
-                Rectangle vsbR = new Rectangle();
-                vsbR.width = 12;
-                vsbR.height = availR.height;
-                vsbR.x = availR.x + availR.width - vsbR.width;
-                vsbR.y = availR.y;
-        
-                if (viewport != null) {
                 viewport.setBounds(availR);
-                }
             }
-            });
+        });
         this.add(scrollbar, BorderLayout.WEST); 
         
 
@@ -294,8 +288,9 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
     //Funktion wenn etwas zum warenkorb hinzugefügt wird
     private void addWarenkorb(Produkt produkt, int anzahl){
+        SpringLayout spring = new SpringLayout();
         warenkorbJPanel = new MyPanel(coolcolour5, 360, 680);
-        warenkorbJPanel.setLayout(null);
+        warenkorbJPanel.setLayout(spring);
         if (anzahl != 0){
             //Checkt ob produkt schon im warenkorb ist, wenn ja wird die menge erhöht, wenn nein wir es hinzugefügt
             if(warenkorb.containsKey(produkt)){
@@ -306,11 +301,14 @@ public class Hauptfenster extends JFrame implements ActionListener{
             }
         }
         warenkorb.forEach((k,v) -> {
-                warenkorbJPanel.add(new MyLabel(coolcolour3, produkt.getName(), 20, 0, y_position, 300, 30));
-                y_position_warenkeorb += 50;
-                this.add(warenkorbJPanel);
-                System.out.println(k.getName() + warenkorb.get(k));
+                //Erstellt für jeden Pordukt im Warenkorb ein Laben zur anzeige, muss das warenkorbJpanel jedesmal aktuallisieren  
+                JLabel label = new MyLabel(coolcolour3, k.getName(), 20);
+                label.setBackground(coolcolour1);
+                warenkorbJPanel.add(label);
         });
+        //Revalidate das WarenkorbJPanel damit die änderungen angezeigt werden
+        this.add(warenkorbJPanel, BorderLayout.EAST);
+        warenkorbJPanel.revalidate();
     }
 
     @Override
