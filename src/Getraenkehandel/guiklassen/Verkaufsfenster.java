@@ -33,7 +33,7 @@ public class Verkaufsfenster extends JFrame{
         this.add(bestaetigen, BorderLayout.PAGE_END);
     }
 
-    public static void getreankverkaufen(Getraenk getraenk, int menge, Color schriftcolour, Color coolcolour, Kasse kasse){
+    public static void getreankverkaufen(Getraenk getraenk, int menge, Color schriftcolour, Color coolcolour, Kasse kasse, Hauptfenster hauptfenster){
         Verkaufsfenster kassenzettel = new Verkaufsfenster(schriftcolour, coolcolour);
 
         JPanel anzeige = new JPanel();
@@ -50,7 +50,7 @@ public class Verkaufsfenster extends JFrame{
             JLabel verkaufsmenge = new MyLabel(schriftcolour, "Verkaufsmenge: " + menge, 20, 0, 110, 240, 50);
             JLabel verkaufspreis = new MyLabel(schriftcolour, "Verkaufspreis " + getraenk.getpreis() + "€", 20, 0, 170, 240, 50);
             JLabel gesamtpreisanzeige = new MyLabel(schriftcolour, "Gesamtpreis: " + runden.format(gesamtpreis) + "€", 20, 0, 230, 240, 50);
-    
+
             anzeige.add(preis);
             anzeige.add(verkaufspreis);
             anzeige.add(gesamtpreisanzeige);
@@ -64,6 +64,7 @@ public class Verkaufsfenster extends JFrame{
             anzeige.add(nichtgenug);
         }
         kassenzettel.setVisible(true);
+        hauptfenster.changeanzeigegetraenk(getraenk);
     }
 
     public static void snackverkaufen(Snack snack, int menge, Color schriftcolour, Color coolcolour, Kasse kasse){

@@ -2,24 +2,31 @@ package Getraenkehandel.guiklassen;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneLayout;
+
 import java.awt.Color;
 import java.util.HashMap;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Rectangle;
-import javax.swing.ScrollPaneLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import Getraenkehandel.Getraenk;
 import Getraenkehandel.Kasse;
+import Getraenkehandel.Produkt;
 import Getraenkehandel.Snack;
 
-public class Hauptfenster extends JFrame{
+public class Hauptfenster extends JFrame implements ActionListener{
 
     int y_position;
+    int y_position_warenkeorb;
     Getraenk aktuellesgetraenk;
     Snack aktuellersnack;
     JPanel getraenkeliste;
@@ -32,6 +39,7 @@ public class Hauptfenster extends JFrame{
     Color coolcolour5;
     String typ;
     Kasse kasse;
+    HashMap<Produkt, Integer> warenkorb;
 
     private JLabel getraenkename;
     private JLabel getraenkebestand;
@@ -41,11 +49,19 @@ public class Hauptfenster extends JFrame{
     private MyLabel snackname;
     private MyLabel snackbestand;
     private MyLabel snackpreis;
+    JPanel warenkorbJPanel;
+    private int getraenkeanzahl;
+    private JFormattedTextField anzahlgetraenke;
+    private MyButton getraenkwarenkorb;
+    private MyButton snackwarenkorb;
+    private JFormattedTextField anzahlsnacks;
+    private int snackanzahl;
 
     public Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
         //Deklarieren der Farben und Importen der Bilder
         this.kasse = kasse;
         y_position = 80;
+        y_position_warenkeorb = 20 ;
         int colorpallet = 2;
         typ = "getraenk";
         //Nimmt den Ersten eintrag aus dem am und setzt in als Startwert für die Anzeige
@@ -54,6 +70,9 @@ public class Hauptfenster extends JFrame{
 
         HashMap.Entry<String,Snack> entry2 = snackmap.entrySet().iterator().next();
         aktuellersnack = entry2.getValue();
+
+        //Erstellen des Warenkorbs
+        warenkorb = new HashMap<>();
 
         if(colorpallet == 1){
             coolcolour1 = new Color(210,190,255); 
@@ -133,16 +152,21 @@ public class Hauptfenster extends JFrame{
         snackliste.setVisible(false);
         scrollpanel.add(snackliste);
 
-        JPanel anzeige = new MyPanel(coolcolour4, 920, 680);
-        this.add(anzeige, BorderLayout.EAST);
+        JPanel anzeige = new MyPanel(coolcolour4, 560, 680);
+        this.add(anzeige, BorderLayout.CENTER);
+
+        warenkorbJPanel = new MyPanel(coolcolour5, 360, 680);
+        warenkorbJPanel.setLayout(null);
+        this.add(warenkorbJPanel, BorderLayout.EAST);  
 
         //Anzeige der Daten des Getraenkes
         anzeige.add(getraenkeanzeige = new MyPanel(coolcolour4, 0, 0, 920, 680));
+
         //Erstellen der Label für die Getränke, werden direkt in der getränkeanzeige add methode erstellt
-        getraenkeanzeige.add(getraenkename = new MyLabel(coolcolour3, "Name: " + aktuellesgetraenk.getName(), 30, 0, 70, 920, 60));
-        getraenkeanzeige.add(getraenkebestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden", 30, 0, 210, 920, 60));
-        getraenkeanzeige.add(getraenkepreis = new MyLabel(coolcolour3, "Preis: " + aktuellesgetraenk.getpreis() + "€", 30, 0, 350, 920, 60));
-        getraenkeanzeige.add(getraenkealkohol = new MyLabel(coolcolour3, "Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%", 30, 0, 490, 920, 60));
+        getraenkeanzeige.add(getraenkename = new MyLabel(coolcolour3, "Name: " + aktuellesgetraenk.getName(), 20, 0, 70, 560, 60));
+        getraenkeanzeige.add(getraenkebestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden", 20, 0, 210, 560, 60));
+        getraenkeanzeige.add(getraenkepreis = new MyLabel(coolcolour3, "Preis: " + aktuellesgetraenk.getpreis() + "€", 20, 0, 350, 560, 60));
+        getraenkeanzeige.add(getraenkealkohol = new MyLabel(coolcolour3, "Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%", 20, 0, 490, 560, 60));
 
         //Snackanzeige
         snackanzeige = new MyPanel(coolcolour4, 0, 0, 920, 680);
@@ -150,26 +174,45 @@ public class Hauptfenster extends JFrame{
         anzeige.add(snackanzeige);
         
         //Erstellen der Snack Label
-        snackanzeige.add(snackname = new MyLabel(coolcolour3, "Name: " + aktuellersnack.getName(), 30, 0, 100, 920, 60));
-        snackanzeige.add(snackbestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden", 30, 0, 300, 920, 60));
-        snackanzeige.add(snackpreis = new MyLabel(coolcolour3, "Preis: " + aktuellersnack.getpreis() + "€", 30, 0, 500, 920, 60));
+        snackanzeige.add(snackname = new MyLabel(coolcolour3, "Name: " + aktuellersnack.getName(), 20, 0, 100, 560, 60));
+        snackanzeige.add(snackbestand = new MyLabel(coolcolour3, "Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden", 20, 0, 300, 560, 60));
+        snackanzeige.add(snackpreis = new MyLabel(coolcolour3, "Preis: " + aktuellersnack.getpreis() + "€", 20, 0, 500, 560, 60));
 
+        
         //Erstellen der Bottumleiste für die Getränke, in dem das verkaufsfeld ist. Die Buttomleiste wird für getränke und snack getrennt da je nachdem ob
         //Getränke oder Snacks aufgerufen werdem müssen verschiedene Methoden für den verkauf benutzt werden müssen. 
-        JPanel buttombargetraenke = new MyPanel(coolcolour1, 0, 640, 920, 40);
+        JPanel buttombargetraenke = new MyPanel(coolcolour1, 0, 640, 560, 40);
         getraenkeanzeige.add(buttombargetraenke);   
-        //Getränke Verkaufsbutton
-        JButton getraenkverkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
-        getraenkverkaufen.addActionListener(e -> Verkaufsfenster.getreankverkaufen(aktuellesgetraenk, 10, coolcolour3, coolcolour5, kasse));
-        buttombargetraenke.add(getraenkverkaufen);
 
         //Erstellen der Buttomleiste für die Snacks
-        JPanel buttombarsnack = new MyPanel(coolcolour1, 0, 640, 920, 40);
+        JPanel buttombarsnack = new MyPanel(coolcolour1, 0, 640, 560, 40);
         snackanzeige.add(buttombarsnack);   
-        //Snack Verkaufsbutton
-        JButton snackverkaufen = new MyButton(coolcolour2, coolcolour3, "Verkaufen", 800, 0, 120, 40);
-        snackverkaufen.addActionListener(e -> Verkaufsfenster.snackverkaufen(aktuellersnack, 10, coolcolour3, coolcolour5, kasse));
-        buttombarsnack.add(snackverkaufen);
+
+        //Input Felder für den Warenkorb
+        anzahlgetraenke = new JFormattedTextField(NumberFormat.getNumberInstance());
+        anzahlgetraenke.setText("0");
+        anzahlgetraenke.setColumns(2);
+        anzahlgetraenke.setBounds(0, 0, 280, 40);       
+        buttombargetraenke.add(anzahlgetraenke);
+
+        //Getränke Warenkorbbutton
+        getraenkwarenkorb = new MyButton(coolcolour2, coolcolour3, "        Zum Warenkorb hinzufügen", 280, 0, 280, 40);
+        getraenkwarenkorb.addActionListener(this);
+        buttombargetraenke.add(getraenkwarenkorb);
+
+        anzahlsnacks = new JFormattedTextField(NumberFormat.getNumberInstance());
+        anzahlsnacks.setText("0");
+        anzahlsnacks.setColumns(2);
+        anzahlsnacks.setBounds(0, 0, 280, 40);       
+        buttombarsnack.add(anzahlsnacks);
+
+        //Snack Warenkorbbutton
+        snackwarenkorb = new MyButton(coolcolour2, coolcolour3, "        Zum Warenkorb hinzufügen", 280, 0, 280, 40);
+        snackwarenkorb.addActionListener(this);
+        buttombarsnack.add(snackwarenkorb);
+
+
+
 
         //Hinzufuegen des Button zum schließen des Programms
         JButton schließen = new MyButton(coolcolour2, coolcolour3, "Schließen", 1160, 0, 120, 40);
@@ -197,6 +240,7 @@ public class Hauptfenster extends JFrame{
         snackmap.forEach((k,v) -> newsnack(y_position, k, v));
     }
 
+    //Erstellt neuen Button für die Getränke Liste
     private void newgetraenk(int y, String name, Getraenk getraenk){
         JButton button = new MyButton(coolcolour1, coolcolour3, name, 60, y, 240, 50);
         button.addActionListener(e -> changeanzeigegetraenk(getraenk));
@@ -204,6 +248,7 @@ public class Hauptfenster extends JFrame{
         getraenkeliste.add(button);
     }
 
+    //Erstellt neuen Button für die Snäck Liste
     private void newsnack(int y, String name, Snack snack){
         JButton button = new MyButton(coolcolour1, coolcolour3, name, 60, y, 240, 50);
         button.addActionListener(e -> changeanzeigesnack(snack));
@@ -211,6 +256,7 @@ public class Hauptfenster extends JFrame{
         snackliste.add(button);
     }
 
+    //Wechselt Anzeige von Snack auf Getränk
     private void changegetraenk(){
         typ = "getraenk";
         snackliste.setVisible(false);
@@ -220,6 +266,7 @@ public class Hauptfenster extends JFrame{
         System.out.println(kasse.getkassenstand());
     }
 
+    //Wechselt Anzeige von Getränk auf Snack
     private void changesnack(){
         typ = "snack";
         snackliste.setVisible(true);
@@ -228,7 +275,8 @@ public class Hauptfenster extends JFrame{
         getraenkeanzeige.setVisible(false);
     }
 
-    private void changeanzeigegetraenk(Getraenk getraenk){
+    //Aktuallisiert die Anzeige der Getränke Daten
+    public void changeanzeigegetraenk(Getraenk getraenk){
         aktuellesgetraenk = getraenk;
         getraenkename.setText("Name: " + aktuellesgetraenk.getName());
         getraenkebestand.setText("Es sind noch: " + aktuellesgetraenk.getbestand() + " im Bestand vorhanden");
@@ -236,11 +284,48 @@ public class Hauptfenster extends JFrame{
         getraenkealkohol.setText("Hat einen Alkoholgehalt von: " + aktuellesgetraenk.getalkohol() + "%");
     }
 
-    private void changeanzeigesnack(Snack snack){
+    //Aktuallisiert die Anzeige der Snäck Daten
+    public void changeanzeigesnack(Snack snack){
         aktuellersnack = snack;
         snackname.setText("Name: " + aktuellersnack.getName());
         snackbestand.setText("Es sind noch: " + aktuellersnack.getbestand() + " im Bestand vorhanden");
         snackpreis.setText("Preis: " + aktuellersnack.getpreis() + "€");
+    }
+
+    //Funktion wenn etwas zum warenkorb hinzugefügt wird
+    private void addWarenkorb(Produkt produkt, int anzahl){
+        warenkorbJPanel = new MyPanel(coolcolour5, 360, 680);
+        warenkorbJPanel.setLayout(null);
+        if (anzahl != 0){
+            //Checkt ob produkt schon im warenkorb ist, wenn ja wird die menge erhöht, wenn nein wir es hinzugefügt
+            if(warenkorb.containsKey(produkt)){
+                warenkorb.put(produkt, warenkorb.get(produkt) + anzahl);
+            }
+            else{
+                warenkorb.put(produkt, anzahl);
+            }
+        }
+        warenkorb.forEach((k,v) -> {
+                warenkorbJPanel.add(new MyLabel(coolcolour3, produkt.getName(), 20, 0, y_position, 300, 30));
+                y_position_warenkeorb += 50;
+                this.add(warenkorbJPanel);
+                System.out.println(k.getName() + warenkorb.get(k));
+        });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == getraenkwarenkorb){
+            if (anzahlgetraenke.getValue() != null){
+                getraenkeanzahl = ((Number) anzahlgetraenke.getValue()).intValue();
+                addWarenkorb(aktuellesgetraenk, getraenkeanzahl);}
+            }
+        if (e.getSource() == snackwarenkorb){
+            if (anzahlsnacks.getValue() != null){
+                snackanzahl = ((Number) anzahlsnacks.getValue()).intValue();
+                addWarenkorb(aktuellersnack, snackanzahl);
+            }
+        }
     }
 }
 
