@@ -5,10 +5,12 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -121,23 +123,8 @@ public class Hauptfenster extends JFrame implements ActionListener{
         JPanel scrollpanel = new MyPanel(coolcolour1, 360, Math.max(100 + (laenge * 80), 680));
 
         //Erstellen der Scrollbar für die getränke und snacks
-        JScrollPane scrollbar = new JScrollPane(scrollpanel);
-        scrollbar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollbar.setBorder(BorderFactory.createEmptyBorder());
-        scrollbar.getVerticalScrollBar().setOpaque(false);
-        scrollbar.getVerticalScrollBar().setUnitIncrement(4);
-        //Unsichtbar machen der Scrollbar ohne die Funktion zu beeinflussen
-        scrollbar.setLayout(new ScrollPaneLayout(){
-            @Override
-            public void layoutContainer(Container parent) {
-                JScrollPane scrollPane = (JScrollPane) parent;
-                Rectangle availR = scrollPane.getBounds();
-                availR.x = availR.y = 0;
-                viewport.setBounds(availR);
-            }
-        });
+        JScrollPane scrollbar = new MyScrollPane(scrollpanel);
         this.add(scrollbar, BorderLayout.WEST); 
-        
 
         getraenkeliste = new MyPanel(coolcolour2, 0, 0, 360, Math.max(100 + (laenge * 80), 680));
         scrollpanel.add(getraenkeliste);
@@ -151,7 +138,9 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
         warenkorbJPanel = new MyPanel(coolcolour5, 360, 680);
         warenkorbJPanel.setLayout(null);
-        this.add(warenkorbJPanel, BorderLayout.EAST);  
+
+        JScrollPane warenscroll = new MyScrollPane(warenkorbJPanel);
+        this.add(warenscroll, BorderLayout.EAST);  
 
         //Anzeige der Daten des Getraenkes
         anzeige.add(getraenkeanzeige = new MyPanel(coolcolour4, 0, 0, 920, 680));
@@ -204,9 +193,6 @@ public class Hauptfenster extends JFrame implements ActionListener{
         snackwarenkorb = new MyButton(coolcolour2, coolcolour3, "        Zum Warenkorb hinzufügen", 280, 0, 280, 40);
         snackwarenkorb.addActionListener(this);
         buttombarsnack.add(snackwarenkorb);
-
-
-
 
         //Hinzufuegen des Button zum schließen des Programms
         JButton schließen = new MyButton(coolcolour2, coolcolour3, "Schließen", 1160, 0, 120, 40);
@@ -294,21 +280,39 @@ public class Hauptfenster extends JFrame implements ActionListener{
         if (anzahl != 0){
             //Checkt ob produkt schon im warenkorb ist, wenn ja wird die menge erhöht, wenn nein wir es hinzugefügt
             if(warenkorb.containsKey(produkt)){
-                warenkorb.put(produkt, warenkorb.get(produkt) + anzahl);
+                //Check ob genug im bestand sind
+                if (produkt.getbestand() >= anzahl + warenkorb.get(produkt)){
+                    warenkorb.put(produkt, warenkorb.get(produkt) + anzahl);
+                }
+                else {
+                    openError(produkt);
+                }
             }
             else{
-                warenkorb.put(produkt, anzahl);
+                //Check ob genug im bestand sind
+                if (produkt.getbestand() >= anzahl){
+                    warenkorb.put(produkt, anzahl);
+                }
+                else {
+                    openError(produkt);
+                }
             }
         }
         warenkorb.forEach((k,v) -> {
-                //Erstellt für jeden Pordukt im Warenkorb ein Laben zur anzeige, muss das warenkorbJpanel jedesmal aktuallisieren  
-                JLabel label = new MyLabel(coolcolour3, k.getName(), 20);
-                label.setBackground(coolcolour1);
-                warenkorbJPanel.add(label);
+            //Erstellt für jeden Pordukt im Warenkorb ein Laben zur anzeige, muss das warenkorbJpanel jedesmal aktuallisieren  
+            JLabel label = new MyLabel(coolcolour3,"Name: " + k.getName() + "    |   Anzahl: " + warenkorb.get(k), 20);
+            label.setBackground(coolcolour1);
+            warenkorbJPanel.add(label);
         });
         //Revalidate das WarenkorbJPanel damit die änderungen angezeigt werden
         this.add(warenkorbJPanel, BorderLayout.EAST);
         warenkorbJPanel.revalidate();
+    }
+
+    //Erstellt das Error Fenster was bei zu wenig bestand geöffnet wird
+    private void openError (Produkt produkt){
+        JOptionPane error = new JOptionPane();
+        JOptionPane.showMessageDialog(error, "Es sind nicht genug " + produkt.getName() + " im Bestand.");
     }
 
     @Override
