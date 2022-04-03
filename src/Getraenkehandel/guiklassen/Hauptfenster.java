@@ -9,12 +9,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.HashMap;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseEvent;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -58,6 +63,8 @@ public class Hauptfenster extends JFrame implements ActionListener{
     private int snackanzahl;
     private MyPanel warenkorbPanelaussen;
 
+    private int xx,xy;
+
     private static final DecimalFormat runden = new DecimalFormat("0.00");
 
     public Hauptfenster(HashMap<String, Getraenk> getraenkemap, HashMap<String, Snack> snackmap, Kasse kasse){
@@ -76,7 +83,6 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
         HashMap.Entry<String,Snack> entry2 = snackmap.entrySet().iterator().next();
         aktuellersnack = entry2.getValue();
-
 
         //Erstellen des Warenkorbs
         warenkorb = new HashMap<>();
@@ -120,6 +126,24 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
         //Erstellen der Panel
         JPanel topbar = new MyPanel(coolcolour1, 1280, 40);
+
+        //Funktion um das Fenster during Runtime zu bewegen/ Sets die Mouse Location als neue Fenster Location
+        topbar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                xx = e.getX();
+                xy = e.getY();
+            }
+        });
+        topbar.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent arg0) {
+
+                int x = arg0.getXOnScreen();
+                int y = arg0.getYOnScreen();
+                Hauptfenster.this.setLocation(x - xx, y - xy);
+            }
+        });
         this.add(topbar ,BorderLayout.PAGE_START);        
 
         //Erstellend des Scrollpanels was in die Scroll hinzugefügt werden soll, mit berechnung der benötigten länge anhand der Anzahl an Getränken/Snacks
@@ -139,14 +163,20 @@ public class Hauptfenster extends JFrame implements ActionListener{
         JPanel anzeige = new MyPanel(coolcolour4, 560, 680);
         this.add(anzeige, BorderLayout.CENTER);
 
-        warenkorbPanelaussen = new MyPanel(coolcolour5, 360, 680);
+        warenkorbPanelaussen = new MyPanel(coolcolour5, 360, 640);
         warenkorbPanelaussen.setLayout(null);
 
+        JPanel waren = new MyPanel(coolcolour5, 360, 680);
+        waren.setLayout(new BorderLayout());
+        this.add(waren, BorderLayout.EAST);  
+        
+
         JScrollPane warenscroll = new MyScrollPane(warenkorbPanelaussen);
-        this.add(warenscroll, BorderLayout.EAST);  
+        warenscroll.setPreferredSize(new Dimension(360, 640));
+        waren.add(warenscroll, BorderLayout.CENTER);
 
         //Panel in dem alle sachen im Warenkorb sein werden, größe wird angepasst ja anchdem wie viele artikel im warenkorb sind
-        warenkorbJPanel = new MyPanel(coolcolour5, 1, 1, 360, y_laenge_waren);
+        warenkorbJPanel = new MyPanel(coolcolour5, 0, 10, 360, y_laenge_waren);
         //Setzt Gridlayout für das Panel
         GridLayout grid = new GridLayout(1, 4);
         warenkorbJPanel.setLayout(grid);
@@ -207,6 +237,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
         getraenkwarenkorb.addActionListener(this);
         buttombargetraenke.add(getraenkwarenkorb);
 
+        //Formated Text Feld was nur nummern an nimmt
         anzahlsnacks = new JFormattedTextField(NumberFormat.getNumberInstance());
         anzahlsnacks.setText("0");
         anzahlsnacks.setColumns(2);
@@ -232,7 +263,23 @@ public class Hauptfenster extends JFrame implements ActionListener{
         JButton snackButton = new MyButton(coolcolour5, coolcolour3, "Snacks", 180, 0, 180, 40);
         snackButton.addActionListener(e -> changesnack());
         topbar.add(snackButton);
-        
+
+        //Button um ein Getränk des SOftware hinzuzufügen
+        JButton addButton = new MyButton(coolcolour2, coolcolour3, "Getränk Hinzufügen", 360, 0, 280, 40);
+        addButton.addActionListener(e -> new GetraenkaddFenster());
+        topbar.add(addButton);
+
+        //Button um den Bestand zu erhöhen
+        JButton erhoeheBestand = new MyButton(coolcolour5, coolcolour3, "Bestand erhöhen", 640, 0, 280, 40);
+        erhoeheBestand.addActionListener(e -> new Bestangerhoehen());
+        topbar.add(erhoeheBestand);
+
+        JButton verkaufen = new MyButton(coolcolour4, coolcolour3, "Verkaufen");
+        verkaufen.setPreferredSize(new Dimension(360, 40));
+        verkaufen.add(new MyLabel(coolcolour3, "Verkaufen", 15));
+        verkaufen.addActionListener(e -> Verkaufsfenster.verkaufen(warenkorb, coolcolour3, coolcolour1, kasse, this));
+        waren.add(verkaufen, BorderLayout.PAGE_END);
+
         //Erstellen der Getränkeliste indem zuerst die überschrift und anschließend die Buttons für die Getränke eingefügt werden
         getraenkeliste.add(new MyLabel(coolcolour3, "Getränkeliste", 30, 0, 0, 360, 80));
         getraenkemap.forEach((k,v) -> newgetraenk(y_position, k, v));
@@ -301,7 +348,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
         //Check ob genug bestand vorhanden ist
         if (produkt.getbestand() >= anzahl){
-            if (anzahl != 0){
+            if (anzahl > 0){
                 //Checkt ob produkt schon im warenkorb ist, wenn ja wird die menge erhöht, wenn nein wir es hinzugefügt
                 if(warenkorb.containsKey(produkt)){
                     //Check ob genug im bestand sind
@@ -315,43 +362,45 @@ public class Hauptfenster extends JFrame implements ActionListener{
                 else{
                     warenkorb.put(produkt, anzahl);
                 }
+            
+                y_laenge_waren = 20 + (warenkorb.size()*20);
+                warenkorbJPanel = new MyPanel(coolcolour5, 0, 10, 360, y_laenge_waren);
+                GridLayout grid = new GridLayout(1 + warenkorb.size(), 4);
+                warenkorbJPanel.setLayout(grid);
+                //Label für die Kategorien
+                JLabel anzeigelabel1 = new MyLabel(coolcolour3,"Name:",15);
+                anzeigelabel1.setHorizontalAlignment(JLabel.CENTER);
+                warenkorbJPanel.add(anzeigelabel1);
+                JLabel anzeigelabel2 = new MyLabel(coolcolour3,"Anzahl:", 15);
+                anzeigelabel2.setHorizontalAlignment(JLabel.CENTER);
+                warenkorbJPanel.add(anzeigelabel2);
+                JLabel anzeigelabel3 = new MyLabel(coolcolour3,"Preis:", 15);
+                anzeigelabel3.setHorizontalAlignment(JLabel.CENTER);
+                warenkorbJPanel.add(anzeigelabel3);
+                JLabel anzeigelabel4 = new MyLabel(coolcolour3,"Gesamtpreis:", 15);
+                anzeigelabel4.setHorizontalAlignment(JLabel.CENTER);
+                warenkorbJPanel.add(anzeigelabel4);
+                //Schleife die alle artikel im warenkorb durch geht
+                warenkorb.forEach((k,v) -> {
+                    //Erstellt für jeden Pordukt im Warenkorb 4 Label zur anzeige, muss das warenkorbJpanel jedesmal aktuallisieren  
+                    double produktpreis = warenkorb.get(k) * k.getpreis();
+                    JLabel label1 = new MyLabel(coolcolour3, k.getName(), 15);
+                    label1.setHorizontalAlignment(JLabel.CENTER);
+                    warenkorbJPanel.add(label1);
+                    JLabel label2 = new MyLabel(coolcolour3, ""+ warenkorb.get(k), 15);
+                    label2.setHorizontalAlignment(JLabel.CENTER);
+                    warenkorbJPanel.add(label2);
+                    JLabel label3 = new MyLabel(coolcolour3, k.getpreis() + " €", 15);
+                    label3.setHorizontalAlignment(JLabel.CENTER);
+                    warenkorbJPanel.add(label3);
+                    JLabel label4 = new MyLabel(coolcolour3, runden.format(produktpreis) + " €", 15);
+                    label4.setHorizontalAlignment(JLabel.CENTER);
+                    warenkorbJPanel.add(label4);
+                });
+                //Revalidate das WarenkorbJPanel damit die änderungen angezeigt werden
+                warenkorbPanelaussen.add(warenkorbJPanel);
+                warenkorbJPanel.revalidate();
             }
-            y_laenge_waren = 20 + (warenkorb.size()*20);
-            warenkorbJPanel = new MyPanel(coolcolour5, 1, 1, 360, y_laenge_waren);
-            GridLayout grid = new GridLayout(1+warenkorb.size(), 4);
-            warenkorbJPanel.setLayout(grid);
-            //Label für die Kategorien
-            JLabel anzeigelabel1 = new MyLabel(coolcolour3,"Name:",15);
-            anzeigelabel1.setHorizontalAlignment(JLabel.CENTER);
-            warenkorbJPanel.add(anzeigelabel1);
-            JLabel anzeigelabel2 = new MyLabel(coolcolour3,"Anzahl:", 15);
-            anzeigelabel2.setHorizontalAlignment(JLabel.CENTER);
-            warenkorbJPanel.add(anzeigelabel2);
-            JLabel anzeigelabel3 = new MyLabel(coolcolour3,"Preis:", 15);
-            anzeigelabel3.setHorizontalAlignment(JLabel.CENTER);
-            warenkorbJPanel.add(anzeigelabel3);
-            JLabel anzeigelabel4 = new MyLabel(coolcolour3,"Gesamtpreis:", 15);
-            anzeigelabel4.setHorizontalAlignment(JLabel.CENTER);
-            warenkorbJPanel.add(anzeigelabel4);
-            warenkorb.forEach((k,v) -> {
-                //Erstellt für jeden Pordukt im Warenkorb 4 Label zur anzeige, muss das warenkorbJpanel jedesmal aktuallisieren  
-                double produktpreis = warenkorb.get(k) * k.getpreis();
-                JLabel label1 = new MyLabel(coolcolour3,k.getName(), 15);
-                label1.setHorizontalAlignment(JLabel.CENTER);
-                warenkorbJPanel.add(label1);
-                JLabel label2 = new MyLabel(coolcolour3,""+ warenkorb.get(k), 15);
-                label2.setHorizontalAlignment(JLabel.CENTER);
-                warenkorbJPanel.add(label2);
-                JLabel label3 = new MyLabel(coolcolour3,"" + k.getpreis(), 15);
-                label3.setHorizontalAlignment(JLabel.CENTER);
-                warenkorbJPanel.add(label3);
-                JLabel label4 = new MyLabel(coolcolour3,"" + runden.format(produktpreis), 15);
-                label4.setHorizontalAlignment(JLabel.CENTER);
-                warenkorbJPanel.add(label4);
-            });
-            //Revalidate das WarenkorbJPanel damit die änderungen angezeigt werden
-            warenkorbPanelaussen.add(warenkorbJPanel);
-            warenkorbJPanel.revalidate();
         }
         else {
             openError(produkt);
@@ -362,6 +411,39 @@ public class Hauptfenster extends JFrame implements ActionListener{
     private void openError (Produkt produkt){
         JOptionPane error = new JOptionPane();
         JOptionPane.showMessageDialog(error, "Es sind nicht genug " + produkt.getName() + " im Bestand.");
+    }
+
+    public void clearwarenkorb(){
+        //Leert Warenkorb Hashmap
+        this.warenkorb = new HashMap<>();
+        if (typ == "getraenk"){
+            changeanzeigegetraenk(aktuellesgetraenk);
+        }
+        else{
+            changeanzeigesnack(aktuellersnack);
+        }
+        //Soll das Warenkorbfenster leeren, funktion nicht
+        y_laenge_waren = 20;
+        warenkorbJPanel.removeAll();
+        warenkorbJPanel.repaint();
+        warenkorbJPanel.revalidate();
+        warenkorbJPanel = new MyPanel(coolcolour5, 0, 10, 360, y_laenge_waren);
+        GridLayout grid = new GridLayout(1, 4);
+        warenkorbJPanel.setLayout(grid);
+        JLabel anzeigelabel1 = new MyLabel(coolcolour3,"Name:",15);
+        anzeigelabel1.setHorizontalAlignment(JLabel.CENTER);
+        warenkorbJPanel.add(anzeigelabel1);
+        JLabel anzeigelabel2 = new MyLabel(coolcolour3,"Anzahl:", 15);
+        anzeigelabel2.setHorizontalAlignment(JLabel.CENTER);
+        warenkorbJPanel.add(anzeigelabel2);
+        JLabel anzeigelabel3 = new MyLabel(coolcolour3,"Preis:", 15);
+        anzeigelabel3.setHorizontalAlignment(JLabel.CENTER);
+        warenkorbJPanel.add(anzeigelabel3);
+        JLabel anzeigelabel4 = new MyLabel(coolcolour3,"Gesamtpreis:", 15);
+        anzeigelabel4.setHorizontalAlignment(JLabel.CENTER);
+        warenkorbJPanel.add(anzeigelabel4);
+        warenkorbPanelaussen.add(warenkorbJPanel);
+        
     }
 
     @Override

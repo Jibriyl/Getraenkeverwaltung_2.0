@@ -5,21 +5,25 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import Getraenkehandel.Getraenk;
 import Getraenkehandel.Kasse;
-import Getraenkehandel.Snack;
+import Getraenkehandel.Produkt;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+
 
 public class Verkaufsfenster extends JFrame{
 
     private static final DecimalFormat runden = new DecimalFormat("0.00");
+    static double gesamtpreis;
+    static HashMap<Produkt, Integer> warenkorb;
 
-    private Verkaufsfenster(Color schriftcolour, Color coolcolour){
-        this.setSize(240,360);
+    private Verkaufsfenster(Color schriftcolour, Color coolcolour, int lenght){
+        this.setSize(360, 60 + lenght);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("Kassenzettel"); //Sets Title of Frame
         this.setResizable(false); //Prevents frame from being resized
@@ -33,69 +37,61 @@ public class Verkaufsfenster extends JFrame{
         this.add(bestaetigen, BorderLayout.PAGE_END);
     }
 
-    public static void getreankverkaufen(Getraenk getraenk, int menge, Color schriftcolour, Color coolcolour, Kasse kasse, Hauptfenster hauptfenster){
-        Verkaufsfenster kassenzettel = new Verkaufsfenster(schriftcolour, coolcolour);
+    public static void verkaufen(HashMap<Produkt, Integer> warenkorb, Color schriftcolour, Color coolcolour, Kasse kasse, Hauptfenster hauptfenster){
+        if (warenkorb.size() > 0){
+            int laenge = 20 + warenkorb.size() * 30;
+            gesamtpreis = 0;
 
-        JPanel anzeige = new JPanel();
-        anzeige.setBackground(coolcolour);
-        anzeige.setLayout(null);
-        anzeige.setPreferredSize(new Dimension(240, 330));
-        kassenzettel.add(anzeige, BorderLayout.PAGE_START);
-
-        if(getraenk.bestandabfrage(menge)){
-            double gesamtpreis = getraenk.verkaufen(menge);
-            kasse.verkauf(gesamtpreis);
-
-            JLabel preis = new MyLabel(schriftcolour, "Name: " + getraenk.getName(), 20, 0, 50, 240, 50);
-            JLabel verkaufsmenge = new MyLabel(schriftcolour, "Verkaufsmenge: " + menge, 20, 0, 110, 240, 50);
-            JLabel verkaufspreis = new MyLabel(schriftcolour, "Verkaufspreis " + getraenk.getpreis() + "€", 20, 0, 170, 240, 50);
-            JLabel gesamtpreisanzeige = new MyLabel(schriftcolour, "Gesamtpreis: " + runden.format(gesamtpreis) + "€", 20, 0, 230, 240, 50);
-
-            anzeige.add(preis);
-            anzeige.add(verkaufspreis);
-            anzeige.add(gesamtpreisanzeige);
-            anzeige.add(verkaufsmenge);
-            
-        }
-        else{
-            kassenzettel.setSize(600,120);
-            anzeige.setPreferredSize(new Dimension(600, 120));
-            JLabel nichtgenug = new MyLabel(schriftcolour, "Leider sind nicht genug " + getraenk.getName() + " im Bestand vorhanden!", 20, 0, 30, 600, 50);
-            anzeige.add(nichtgenug);
-        }
-        kassenzettel.setVisible(true);
-        hauptfenster.changeanzeigegetraenk(getraenk);
-    }
-
-    public static void snackverkaufen(Snack snack, int menge, Color schriftcolour, Color coolcolour, Kasse kasse){
-        Verkaufsfenster kassenzettel = new Verkaufsfenster(schriftcolour, coolcolour);
-
-        JPanel anzeige = new JPanel();
-        anzeige.setBackground(coolcolour);
-        anzeige.setLayout(null);
-        anzeige.setPreferredSize(new Dimension(240, 330));
-        kassenzettel.add(anzeige, BorderLayout.PAGE_START);
-
-        if(snack.bestandabfrage(menge)){
-            double gesamtpreis = snack.verkaufen(menge);
-            kasse.verkauf(gesamtpreis);
-
-            JLabel preis = new MyLabel(schriftcolour, "Name: " + snack.getName(), 20, 0, 50, 240, 50);
-            JLabel verkaufsmenge = new MyLabel(schriftcolour, "Verkaufsmenge: " + menge, 20, 0, 110, 240, 50);
-            JLabel verkaufspreis = new MyLabel(schriftcolour, "Verkaufspreis " + snack.getpreis() + "€", 20, 0, 170, 240, 50);
-            JLabel gesamtpreisanzeige = new MyLabel(schriftcolour, "Gesamtpreis: " + runden.format(gesamtpreis) + "€", 20, 0, 230, 240, 50);
+            Verkaufsfenster kassenzettel = new Verkaufsfenster(schriftcolour, coolcolour, laenge);
     
-            anzeige.add(preis);
-            anzeige.add(verkaufspreis);
-            anzeige.add(gesamtpreisanzeige);
-            anzeige.add(verkaufsmenge);
+            JPanel anzeige = new JPanel();
+            anzeige.setBackground(coolcolour);
+            GridLayout grid = new GridLayout(1 + warenkorb.size(), 4, 0, 0);
+            anzeige.setLayout(grid);
+            anzeige.setPreferredSize(new Dimension(240, laenge));
+            kassenzettel.add(anzeige, BorderLayout.PAGE_START);
+
+            //Label für die Kategorien
+            JLabel anzeigelabel1 = new MyLabel(schriftcolour,"Name:",15);
+            anzeigelabel1.setHorizontalAlignment(JLabel.CENTER);
+            anzeige.add(anzeigelabel1);
+            JLabel anzeigelabel2 = new MyLabel(schriftcolour,"Anzahl:", 15);
+            anzeigelabel2.setHorizontalAlignment(JLabel.CENTER);
+            anzeige.add(anzeigelabel2);
+            JLabel anzeigelabel3 = new MyLabel(schriftcolour,"Preis:", 15);
+            anzeigelabel3.setHorizontalAlignment(JLabel.CENTER);
+            anzeige.add(anzeigelabel3);
+            JLabel anzeigelabel4 = new MyLabel(schriftcolour,"Gesamtpreis:", 15);
+            anzeigelabel4.setHorizontalAlignment(JLabel.CENTER);
+            anzeige.add(anzeigelabel4);
+            //Schleife die alle artikel im warenkorb durch geht
+            warenkorb.forEach((k,v) -> {
+                //Erstellt für jeden Pordukt im Warenkorb 4 Label zur anzeige, muss das warenkorbJpanel jedesmal aktuallisieren  
+                //Verkauft jedes der Produkte
+                double produktpreis = k.verkaufen(v);
+                JLabel label1 = new MyLabel(schriftcolour, k.getName(), 15);
+                label1.setHorizontalAlignment(JLabel.CENTER);
+                anzeige.add(label1);
+                JLabel label2 = new MyLabel(schriftcolour, ""+ warenkorb.get(k), 15);
+                label2.setHorizontalAlignment(JLabel.CENTER);
+                anzeige.add(label2);
+                JLabel label3 = new MyLabel(schriftcolour, k.getpreis() + " €", 15);
+                label3.setHorizontalAlignment(JLabel.CENTER);
+                anzeige.add(label3);
+                JLabel label4 = new MyLabel(schriftcolour, runden.format(produktpreis) + " €", 15);
+                label4.setHorizontalAlignment(JLabel.CENTER);
+                anzeige.add(label4);
+                gesamtpreis += produktpreis;
+            });
+            JPanel preispanel = new MyPanel(coolcolour, 360, 30);
+            preispanel.setLayout(new BorderLayout());
+            JLabel gesamtpreislabel = new MyLabel(schriftcolour, "Gesamtpreis: " + runden.format(gesamtpreis), 20);
+            gesamtpreislabel.setHorizontalAlignment(JLabel.CENTER);
+            preispanel.add(gesamtpreislabel, BorderLayout.CENTER);
+            kassenzettel.add(preispanel, BorderLayout.CENTER);
+            kassenzettel.setVisible(true);
+            hauptfenster.clearwarenkorb();
+            kasse.verkauf(gesamtpreis);
         }
-        else{
-            kassenzettel.setSize(600,120);
-            anzeige.setPreferredSize(new Dimension(600, 120));
-            JLabel nichtgenug = new MyLabel(schriftcolour, "Leider sind nicht genug " + snack.getName() + " im Bestand vorhanden!", 20, 0, 30, 600, 50);
-            anzeige.add(nichtgenug);
-        }
-        kassenzettel.setVisible(true);
     }
 }

@@ -20,7 +20,7 @@ public class Getraenkeverwaltung{
         getraenke.put("Cola Light", new Getraenk("Cola Light", 2.99, 10, 0));
         getraenke.put("Vodka", new Getraenk("Vodka", 5, 30, 40));
         getraenke.put("Tomatensaft", new Getraenk("Tomatensaft", 1, 5, 0));
-        getraenke.put("WhiteRussen", new Getraenk("WhiteRussian", 0.49, 40, 35));
+        getraenke.put("WhiteRussian", new Getraenk("WhiteRussian", 0.49, 40, 35));
         getraenke.put("Fritz", new Getraenk("Fritz", 2, 50, 0));
         getraenke.put("Effekt", new Getraenk("Effekt", 1, 10, 0));
         getraenke.put("Effekt Zero", new Getraenk("Effekt Zero", 1, 10, 0));
@@ -34,9 +34,6 @@ public class Getraenkeverwaltung{
         snacks.put("Popkorn", new Snack("Popkorn", 3.49, 10));
 
         Hauptfenster hauptfenster = new Hauptfenster(getraenke, snacks, kasse);
-        hauptfenster.setVisible(true); //Makes the Window Visible
-
-
+        hauptfenster.setVisible(true); //Macht das Hauptfenster sichtbar
     }
-
 }
