@@ -1,3 +1,6 @@
-#Getränkeverwaltung mit GUI für das zweite Schulprojekt.
+# Getränkeverwaltung mit GUI
 
+### Aufgabe:
+Erweiterung der Getraenkeverwaltung aus dem ersten Projekt um eine GUI.
 
+### Klassendiagram
