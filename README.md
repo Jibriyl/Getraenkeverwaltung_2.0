@@ -1,1 +1,3 @@
-Getränkeverwaltung Schulprojekt
+#Getränkeverwaltung mit GUI für das zweite Schulprojekt.
+
+
