@@ -3,4 +3,4 @@
 ### Aufgabe:
 Erweiterung der Getraenkeverwaltung aus dem ersten Projekt um eine GUI.
 
-### Klassendiagram
+### Klassendiagramm
