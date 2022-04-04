@@ -2,7 +2,7 @@ package Getraenkehandel;
 
 import java.lang.String;
 public abstract class Produkt {
-
+    //Ist eine Abstrakte Klasse, es können also nicht direkt objekte dieser klasse erzeugt werden
     //Die Variablen der Klasse Produkt
     private String name;
     private double preis;
@@ -60,6 +60,7 @@ public abstract class Produkt {
         return x;
     }
 
+    //Verkauft ausgwählte menge, reduziert den bestand und gibt den gesamtpreis als return zurück
     public double verkaufen(int menge){
         this.bestand = this.bestand - menge;
         return (menge * this.preis);

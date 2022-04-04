@@ -8,7 +8,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneLayout;
 import java.awt.Container;
 
-
+//Klasse zum erzeugen von JScrollpane, dient nur um code in den Fensterklassen zu reduzeiren.
+//Ein Konstruktor mit setbounds und einen ohne 
 public class MyScrollPane extends JScrollPane{
     
     public MyScrollPane(JPanel panel) {

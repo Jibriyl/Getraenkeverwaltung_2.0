@@ -19,7 +19,6 @@ import java.text.NumberFormat;
 
 public class Bestangerhoehen extends JFrame implements ActionListener{
     
-    private int i;
     private JButton bestaetigen;
     private JFormattedTextField anzahlfeld;
     private String typ;
@@ -27,9 +26,9 @@ public class Bestangerhoehen extends JFrame implements ActionListener{
     private HashMap<String, Snack> snacks;
     private JComboBox getraenkebox;
     private JComboBox snackbox;
+    Hauptfenster haupt;
 
-
-    public Bestangerhoehen(Color schriftcolor){
+    public Bestangerhoehen(HashMap<String, Getraenk> getraenke, HashMap<String, Snack> snacks, Color schriftcolor, Color backgroundcolor, String typ, Hauptfenster haupt){
         
         this.setSize(420, 360);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -41,33 +40,33 @@ public class Bestangerhoehen extends JFrame implements ActionListener{
         this.setLocationRelativeTo(null); //Setzt das Fenster in die mitte des Bildschirms
 
         bestaetigen = new MyButton(new Color(70, 70, 70), schriftcolor, "OK");
-        bestaetigen.addActionListener(e -> this.dispose());
+        bestaetigen.addActionListener(this);
+        bestaetigen.setBackground(new Color(120, 120, 120));
+        bestaetigen.setHorizontalTextPosition(JButton.CENTER);
         this.add(bestaetigen, BorderLayout.PAGE_END);
-    }
 
-    public void erhoehen(HashMap<String, Getraenk> getraenke, HashMap<String, Snack> snacks, Color schriftcolor, Color backgroundcolor, String typ){
-        Bestangerhoehen fenster = new Bestangerhoehen(schriftcolor);
-        fenster.setVisible(true);
-        i = 0;
+        this.haupt = haupt;
         this.typ = typ;
         this.getraenke = getraenke;
         this.snacks = snacks;
         if(typ == "getraenk"){
-            //Panel als Hintergrund
+            //Erzeugen des Mainpanels
             JPanel mainpanel = new MyPanel(backgroundcolor, 420, 720);
             mainpanel.setLayout(null);
 
-            fenster.add(mainpanel, BorderLayout.CENTER);
+            this.add(mainpanel, BorderLayout.CENTER);
             getraenkebox = new JComboBox();
             getraenkebox.setBounds(160, 50, 100, 30);
 
+            //Erstellen Inputfeld
             anzahlfeld = new JFormattedTextField(NumberFormat.getNumberInstance());
+            anzahlfeld.setText("0");
+            anzahlfeld.setColumns(2);
             anzahlfeld.setBounds(160, 150, 100, 30);
 
             //Füg jedes Getränk in die Kombobox hinzu
             getraenke.forEach((k,v) -> {
                 getraenkebox.addItem(k);
-                i += 1;
             });
             mainpanel.add(getraenkebox);
             mainpanel.add(anzahlfeld);
@@ -77,33 +76,48 @@ public class Bestangerhoehen extends JFrame implements ActionListener{
             //Panel als Hintergrund
             JPanel mainpanel = new MyPanel(new Color(200,200,200), 420, 720);
             mainpanel.setLayout(null);
-            fenster.add(mainpanel, BorderLayout.CENTER);
+            this.add(mainpanel, BorderLayout.CENTER);
             snackbox = new JComboBox();
             snackbox.setBounds(160, 50, 100, 30);
 
             anzahlfeld = new JFormattedTextField(NumberFormat.getNumberInstance());
+            anzahlfeld.setText("0");
+            anzahlfeld.setColumns(2);
             anzahlfeld.setBounds(160, 150, 100, 30);
 
             //Füg jeden Snack in die Kombobox hinzu
             snacks.forEach((k,v) -> {
                 snackbox.addItem(k);
-                i += 1;
             });
             mainpanel.add(snackbox);
             mainpanel.add(anzahlfeld);
         }
+        this.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        //Wenn Button gedrückt wird
         if(e.getSource() == bestaetigen){
-            int anzahl = ((Number) anzahlfeld.getValue()).intValue();
-            if (typ == "getraenk"){
-                Getraenk selectedgetraenk = getraenke.get(getraenkebox.getSelectedIndex());
-                System.out.println(getraenkebox.getSelectedIndex());
-                selectedgetraenk.bestanderhoehen(anzahl);
+            if(anzahlfeld.getValue() != null){
+                //Nimmt die eigegebene anzahl aus dem Eingabefeld
+                int anzahl = ((Number) anzahlfeld.getValue()).intValue();
+                if (anzahl >= 0){
+                    //Check ob getränk oder snack
+                    if (typ == "getraenk"){
+                        //Nimmt aus der Combobox was ausgewählt ist
+                        Getraenk selectedgetraenk = getraenke.get(getraenkebox.getSelectedItem());
+                        selectedgetraenk.bestanderhoehen(anzahl);
+                        this.dispose();
+                    }
+                    else{
+                        Snack selectedsnack = snacks.get(snackbox.getSelectedItem());
+                        selectedsnack.bestanderhoehen(anzahl);
+                        this.dispose();
+                    }
+                }
+                haupt.refresh();
             }
-
         }
     }
 }

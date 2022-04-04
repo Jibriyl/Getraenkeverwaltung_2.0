@@ -4,6 +4,8 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
 
+//Klasse zum erzeugen von JLabel, dient nur um code in den Fensterklassen zu reduzeiren.
+//Ein Konstruktor mit setbounds und einen ohne 
 public class MyLabel extends JLabel{
     public MyLabel(Color schriftcolour, String label, int schriftgroesse){
         this.setText(label); //Setting the text for a Label

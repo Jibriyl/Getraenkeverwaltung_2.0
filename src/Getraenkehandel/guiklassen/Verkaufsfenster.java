@@ -32,6 +32,7 @@ public class Verkaufsfenster extends JFrame{
         this.setUndecorated(true);
         this.setLocationRelativeTo(null); //Setzt das Fenster in die mitte des Bildschirms
 
+        //Button um fenster zu schließen
         JButton bestaetigen = new MyButton(coolcolour, schriftcolour, "OK");
         bestaetigen.addActionListener(e -> this.dispose());
         this.add(bestaetigen, BorderLayout.PAGE_END);
@@ -42,6 +43,7 @@ public class Verkaufsfenster extends JFrame{
             int laenge = 20 + warenkorb.size() * 30;
             gesamtpreis = 0;
 
+            //Beim auführen der Methode wird alles verkauft was im warenkorb ist
             Verkaufsfenster kassenzettel = new Verkaufsfenster(schriftcolour, coolcolour, laenge);
     
             JPanel anzeige = new JPanel();
@@ -67,8 +69,9 @@ public class Verkaufsfenster extends JFrame{
             //Schleife die alle artikel im warenkorb durch geht
             warenkorb.forEach((k,v) -> {
                 //Erstellt für jeden Pordukt im Warenkorb 4 Label zur anzeige, muss das warenkorbJpanel jedesmal aktuallisieren  
-                //Verkauft jedes der Produkte
+                //Verkauft jedes der Produkte, reduziert den bestand des Produkts
                 double produktpreis = k.verkaufen(v);
+                //generiert die verkaufsliste
                 JLabel label1 = new MyLabel(schriftcolour, k.getName(), 15);
                 label1.setHorizontalAlignment(JLabel.CENTER);
                 anzeige.add(label1);
@@ -81,6 +84,7 @@ public class Verkaufsfenster extends JFrame{
                 JLabel label4 = new MyLabel(schriftcolour, runden.format(produktpreis) + " €", 15);
                 label4.setHorizontalAlignment(JLabel.CENTER);
                 anzeige.add(label4);
+                //Addiert bei jedem Pordukt den Gesamtpreis auf
                 gesamtpreis += produktpreis;
             });
             JPanel preispanel = new MyPanel(coolcolour, 360, 30);
@@ -90,9 +94,15 @@ public class Verkaufsfenster extends JFrame{
             preispanel.add(gesamtpreislabel, BorderLayout.CENTER);
             kassenzettel.add(preispanel, BorderLayout.CENTER);
             kassenzettel.setVisible(true);
+            //Cleared den Warenkorb
             hauptfenster.clearwarenkorb();
+            //Refreshed die anzeige im hauptmenu für den bestand
             hauptfenster.refresh();
+            //Fügt den gesamtpreis dem kassenstand hinzu
             kasse.verkauf(gesamtpreis);
+            //Aktuallisiert die Kassenstand anzeige
+            hauptfenster.kassenstandrefresh();
+
         }
     }
 }

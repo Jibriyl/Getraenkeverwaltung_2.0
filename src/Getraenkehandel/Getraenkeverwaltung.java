@@ -7,6 +7,7 @@ import Getraenkehandel.guiklassen.Hauptfenster;
 public class Getraenkeverwaltung{
     public static void main(String[] args) {
 
+        //Erstellen Kasse, 100 euro start kassenstand
         Kasse kasse = new Kasse(100);
 
         // Erstelen der Map in der die Getraenke und Snack Objekte gespeichert werden.
@@ -32,7 +33,9 @@ public class Getraenkeverwaltung{
         snacks.put("Nuesse", new Snack("Nuesse", 2.49, 30));
         snacks.put("Pringels", new Snack("Pringels", 3.99, 50));
         snacks.put("Popkorn", new Snack("Popkorn", 3.49, 10));
+        snacks.put("Twix", new Snack("Twix", 1.00, 45));
 
+        //Aufrufen des Hauptfensters und übergeben der Maps und der Kasse
         Hauptfenster hauptfenster = new Hauptfenster(getraenke, snacks, kasse);
         hauptfenster.setVisible(true); //Macht das Hauptfenster sichtbar
     }

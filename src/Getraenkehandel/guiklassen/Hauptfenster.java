@@ -64,6 +64,8 @@ public class Hauptfenster extends JFrame implements ActionListener{
     private MyPanel warenkorbPanelaussen;
 
     private int xx,xy;
+    private MyPanel topbar;
+    private MyLabel kassenstand;
 
     private static final DecimalFormat runden = new DecimalFormat("0.00");
 
@@ -125,11 +127,12 @@ public class Hauptfenster extends JFrame implements ActionListener{
         this.setLocationRelativeTo(null);
 
         //Erstellen der Panel
-        JPanel topbar = new MyPanel(coolcolour1, 1280, 40);
+        topbar = new MyPanel(coolcolour1, 1280, 40);
 
         //Funktion um das Fenster during Runtime zu bewegen/ Sets die Mouse Location als neue Fenster Location
         topbar.addMouseListener(new MouseAdapter() {
             @Override
+            //Getted die Mouselocation und speichert sie, wenn die maus geklickt wird
             public void mousePressed(MouseEvent e) {
                 xx = e.getX();
                 xy = e.getY();
@@ -138,7 +141,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
         topbar.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent arg0) {
-
+                //Setzt die Fensterlocation als die mouse location, wenn das fenster gezogen wird 
                 int x = arg0.getXOnScreen();
                 int y = arg0.getYOnScreen();
                 Hauptfenster.this.setLocation(x - xx, y - xy);
@@ -153,48 +156,35 @@ public class Hauptfenster extends JFrame implements ActionListener{
         JScrollPane scrollbar = new MyScrollPane(scrollpanel);
         this.add(scrollbar, BorderLayout.WEST); 
 
+        //Panel für die liste aller getränke Buttons
         getraenkeliste = new MyPanel(coolcolour2, 0, 0, 360, Math.max(100 + (laenge * 80), 680));
         scrollpanel.add(getraenkeliste);
 
+        //Panel für die liste aller snack buttons
         snackliste = new MyPanel(coolcolour5, 0, 0, 360, Math.max(100 + (laenge * 80), 680));
         snackliste.setVisible(false);
         scrollpanel.add(snackliste);
 
+        //Anzeige panel, getränk und snack anzeige werden hier rein getan
         JPanel anzeige = new MyPanel(coolcolour4, 560, 680);
         this.add(anzeige, BorderLayout.CENTER);
 
+        //Warenkorb panel aussen, wird in die scrollpane getan
         warenkorbPanelaussen = new MyPanel(coolcolour5, 360, 640);
         warenkorbPanelaussen.setLayout(null);
 
+        //Warenkorb panel, wird in das warenkorbpanel aussen getan und die größe wird dynamisch anhand der anzahl an dingen im warenkorb bestimmt
         JPanel waren = new MyPanel(coolcolour5, 360, 680);
         waren.setLayout(new BorderLayout());
         this.add(waren, BorderLayout.EAST);  
         
-
+        //Scrollpane für den warenkorb
         JScrollPane warenscroll = new MyScrollPane(warenkorbPanelaussen);
         warenscroll.setPreferredSize(new Dimension(360, 640));
         waren.add(warenscroll, BorderLayout.CENTER);
 
         //Panel in dem alle sachen im Warenkorb sein werden, größe wird angepasst ja anchdem wie viele artikel im warenkorb sind
-        warenkorbJPanel = new MyPanel(coolcolour5, 0, 10, 360, y_laenge_waren);
-        //Setzt Gridlayout für das Panel
-        GridLayout grid = new GridLayout(1, 4);
-        warenkorbJPanel.setLayout(grid);
-        warenkorbPanelaussen.add(warenkorbJPanel);
-
-        //Erstellt die Labels für den warenkorb, werden mit gridlayout sortiert
-        JLabel anzeigelabel1 = new MyLabel(coolcolour3,"Name:",15);
-        anzeigelabel1.setHorizontalAlignment(JLabel.CENTER);
-        warenkorbJPanel.add(anzeigelabel1);
-        JLabel anzeigelabel2 = new MyLabel(coolcolour3,"Anzahl:", 15);
-        anzeigelabel2.setHorizontalAlignment(JLabel.CENTER);
-        warenkorbJPanel.add(anzeigelabel2);
-        JLabel anzeigelabel3 = new MyLabel(coolcolour3,"Preis:", 15);
-        anzeigelabel3.setHorizontalAlignment(JLabel.CENTER);
-        warenkorbJPanel.add(anzeigelabel3);
-        JLabel anzeigelabel4 = new MyLabel(coolcolour3,"Gesamtpreis:", 15);
-        anzeigelabel4.setHorizontalAlignment(JLabel.CENTER);
-        warenkorbJPanel.add(anzeigelabel4);
+        addanzeige();
 
         //Anzeige der Daten des Getraenkes
         anzeige.add(getraenkeanzeige = new MyPanel(coolcolour4, 0, 0, 920, 680));
@@ -264,20 +254,20 @@ public class Hauptfenster extends JFrame implements ActionListener{
         snackButton.addActionListener(e -> changesnack());
         topbar.add(snackButton);
 
-        //Button um ein Getränk des SOftware hinzuzufügen
-        JButton addButton = new MyButton(coolcolour2, coolcolour3, "Getränk Hinzufügen", 360, 0, 280, 40);
-        addButton.addActionListener(e -> new GetraenkaddFenster());
-        topbar.add(addButton);
-
         //Button um den Bestand zu erhöhen
         JButton erhoeheBestand = new MyButton(coolcolour5, coolcolour3, "Bestand erhöhen", 640, 0, 280, 40);
         erhoeheBestand.addActionListener(e ->{
-            Bestangerhoehen be = new Bestangerhoehen(coolcolour3);
-            be.erhoehen(getraenkemap, snackmap, coolcolour3, coolcolour5, typ);
+            //Bei drücken des Buttons, wird neues bestanderhöhen fenster geöffnet und die erhöhen methode ausgeführt
+            Bestangerhoehen bestandfenster = new Bestangerhoehen(getraenkemap, snackmap, coolcolour3, coolcolour5, typ, this);
         });
-        
         topbar.add(erhoeheBestand);
 
+        //Zeigt kassenstand am oberen Bildschirmrand an
+        kassenstand = new MyLabel(coolcolour3,"Kassenstand: " + kasse.getkassenstand(), 20, 360, 0, 280, 40);
+        kassenstand.setHorizontalAlignment(JLabel.CENTER);
+        topbar.add(kassenstand);
+
+        //Verkaufsbutton, übergibt warenkorb liste an die verkaufsfunktion
         JButton verkaufen = new MyButton(coolcolour4, coolcolour3, "Verkaufen");
         verkaufen.setPreferredSize(new Dimension(360, 40));
         verkaufen.add(new MyLabel(coolcolour3, "Verkaufen", 15));
@@ -286,6 +276,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
         //Erstellen der Getränkeliste indem zuerst die überschrift und anschließend die Buttons für die Getränke eingefügt werden
         getraenkeliste.add(new MyLabel(coolcolour3, "Getränkeliste", 30, 0, 0, 360, 80));
+        //Position des Buttons wir für jeden button nach unten verschoben
         getraenkemap.forEach((k,v) -> newgetraenk(y_position, k, v));
 
         //Zurücksetzen der position an der, der erste button positioniert wird
@@ -313,12 +304,13 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
     //Wechselt Anzeige von Snack auf Getränk
     private void changegetraenk(){
+        //Ändert typ auf getränk wenn auf getränk gewechselt wird
         typ = "getraenk";
+        //Setzt vivibility allee snack panels auf false aund aller getraeke panel auf true
         snackliste.setVisible(false);
         getraenkeliste.setVisible(true);
         snackanzeige.setVisible(false);
         getraenkeanzeige.setVisible(true);
-        System.out.println(kasse.getkassenstand());
     }
 
     //Wechselt Anzeige von Getränk auf Snack
@@ -366,7 +358,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
                 else{
                     warenkorb.put(produkt, anzahl);
                 }
-            
+                //Legt die länge des warenkorbspanels fest anhand daran wie viele dinge im warenkorb sind
                 y_laenge_waren = 20 + (warenkorb.size()*20);
                 warenkorbJPanel = new MyPanel(coolcolour5, 0, 10, 360, y_laenge_waren);
                 GridLayout grid = new GridLayout(1 + warenkorb.size(), 4);
@@ -420,11 +412,16 @@ public class Hauptfenster extends JFrame implements ActionListener{
     public void clearwarenkorb(){
         //Leert Warenkorb Hashmap
         this.warenkorb = new HashMap<>();
-        //Soll das Warenkorbfenster leeren, funktion nicht
+        //Warenkorb Panel leeren aber löscht teil der anzeige mit, konnte das problem nicht finden
         y_laenge_waren = 20;
         warenkorbJPanel.removeAll();
         warenkorbJPanel.repaint();
         warenkorbJPanel.revalidate();
+        addanzeige();
+    }
+
+    //Added die anzeige des Warenkorbs bei erstellen und leeren des Warenkorbs
+    private void addanzeige(){
         warenkorbJPanel = new MyPanel(coolcolour5, 0, 10, 360, y_laenge_waren);
         GridLayout grid = new GridLayout(1, 4);
         warenkorbJPanel.setLayout(grid);
@@ -443,6 +440,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
         warenkorbPanelaussen.add(warenkorbJPanel);
     }
 
+    //Damit andere Klassen die anzeige das aktuellen getränks/snacks aktuallisieren können, für bestandanzeigen genutzt
     public void refresh(){
         if (typ == "getraenk"){
             changeanzeigegetraenk(aktuellesgetraenk);
@@ -452,10 +450,18 @@ public class Hauptfenster extends JFrame implements ActionListener{
         }
     }
 
+    //Genutzt damit andere Klassen den Kassenstand aktuallisieren können
+    public void kassenstandrefresh(){
+        kassenstand.setText("Kassenstand: " + kasse.getkassenstand());
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        //Überprüft welcher Button gedrückt wurde
         if (e.getSource() == getraenkwarenkorb){
+            //Prüft ob ein wert eingetragen wurde
             if (anzahlgetraenke.getValue() != null){
+                //Nimmt den Value von dem inputfeld für den warenkorb
                 getraenkeanzahl = ((Number) anzahlgetraenke.getValue()).intValue();
                 addWarenkorb(aktuellesgetraenk, getraenkeanzahl);}
             }
