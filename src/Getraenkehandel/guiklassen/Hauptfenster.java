@@ -271,7 +271,11 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
         //Button um den Bestand zu erhöhen
         JButton erhoeheBestand = new MyButton(coolcolour5, coolcolour3, "Bestand erhöhen", 640, 0, 280, 40);
-        erhoeheBestand.addActionListener(e -> new Bestangerhoehen());
+        erhoeheBestand.addActionListener(e ->{
+            Bestangerhoehen be = new Bestangerhoehen(coolcolour3);
+            be.erhoehen(getraenkemap, snackmap, coolcolour3, coolcolour5, typ);
+        });
+        
         topbar.add(erhoeheBestand);
 
         JButton verkaufen = new MyButton(coolcolour4, coolcolour3, "Verkaufen");
@@ -416,12 +420,6 @@ public class Hauptfenster extends JFrame implements ActionListener{
     public void clearwarenkorb(){
         //Leert Warenkorb Hashmap
         this.warenkorb = new HashMap<>();
-        if (typ == "getraenk"){
-            changeanzeigegetraenk(aktuellesgetraenk);
-        }
-        else{
-            changeanzeigesnack(aktuellersnack);
-        }
         //Soll das Warenkorbfenster leeren, funktion nicht
         y_laenge_waren = 20;
         warenkorbJPanel.removeAll();
@@ -443,7 +441,15 @@ public class Hauptfenster extends JFrame implements ActionListener{
         anzeigelabel4.setHorizontalAlignment(JLabel.CENTER);
         warenkorbJPanel.add(anzeigelabel4);
         warenkorbPanelaussen.add(warenkorbJPanel);
-        
+    }
+
+    public void refresh(){
+        if (typ == "getraenk"){
+            changeanzeigegetraenk(aktuellesgetraenk);
+        }
+        else{
+            changeanzeigesnack(aktuellersnack);
+        }
     }
 
     @Override

@@ -91,6 +91,7 @@ public class Verkaufsfenster extends JFrame{
             kassenzettel.add(preispanel, BorderLayout.CENTER);
             kassenzettel.setVisible(true);
             hauptfenster.clearwarenkorb();
+            hauptfenster.refresh();
             kasse.verkauf(gesamtpreis);
         }
     }

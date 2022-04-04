@@ -1,7 +1,7 @@
 package Getraenkehandel;
 
 import java.lang.String;
-public class Produkt {
+public abstract class Produkt {
 
     //Die Variablen der Klasse Produkt
     private String name;
