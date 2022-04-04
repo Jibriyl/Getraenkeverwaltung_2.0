@@ -263,7 +263,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
         topbar.add(erhoeheBestand);
 
         //Zeigt kassenstand am oberen Bildschirmrand an
-        kassenstand = new MyLabel(coolcolour3,"Kassenstand: " + kasse.getkassenstand(), 20, 360, 0, 280, 40);
+        kassenstand = new MyLabel(coolcolour3,"Kassenstand: " + runden.format(kasse.getkassenstand()) , 20, 360, 0, 280, 40);
         kassenstand.setHorizontalAlignment(JLabel.CENTER);
         topbar.add(kassenstand);
 
@@ -452,7 +452,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
 
     //Genutzt damit andere Klassen den Kassenstand aktuallisieren können
     public void kassenstandrefresh(){
-        kassenstand.setText("Kassenstand: " + kasse.getkassenstand());
+        kassenstand.setText("Kassenstand: " + runden.format(kasse.getkassenstand()));
     }
 
     @Override
