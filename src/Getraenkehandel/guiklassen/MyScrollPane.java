@@ -21,6 +21,7 @@ public class MyScrollPane extends JScrollPane{
         this.getVerticalScrollBar().setUnitIncrement(4);
         //Unsichtbar machen der Scrollbar ohne die Funktion zu beeinflussen
         this.setLayout(new ScrollPaneLayout(){
+            //Setzt die größe der scrollpane auf null
             @Override
             public void layoutContainer(Container parent) {
                 JScrollPane scrollPane = (JScrollPane) parent;

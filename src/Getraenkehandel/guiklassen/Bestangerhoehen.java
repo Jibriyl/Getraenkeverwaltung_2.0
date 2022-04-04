@@ -108,15 +108,14 @@ public class Bestangerhoehen extends JFrame implements ActionListener{
                         //Nimmt aus der Combobox was ausgewählt ist
                         Getraenk selectedgetraenk = getraenke.get(getraenkebox.getSelectedItem());
                         selectedgetraenk.bestanderhoehen(anzahl);
-                        this.dispose();
                     }
                     else{
                         Snack selectedsnack = snacks.get(snackbox.getSelectedItem());
                         selectedsnack.bestanderhoehen(anzahl);
-                        this.dispose();
                     }
                 }
                 haupt.refresh();
+                this.dispose();
             }
         }
     }

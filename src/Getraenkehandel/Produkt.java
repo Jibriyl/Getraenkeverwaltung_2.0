@@ -4,11 +4,11 @@ import java.lang.String;
 public abstract class Produkt {
     //Ist eine Abstrakte Klasse, es können also nicht direkt objekte dieser klasse erzeugt werden
     //Die Variablen der Klasse Produkt
-    private String name;
-    private double preis;
-    private int bestand;
+    protected String name;
+    protected double preis;
+    protected int bestand;
 
-    public Produkt(String name, double preis, int bestand){
+    protected Produkt(String name, double preis, int bestand){
         
         this.name = name;
       

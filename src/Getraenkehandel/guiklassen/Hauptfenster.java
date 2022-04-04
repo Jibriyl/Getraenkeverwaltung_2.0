@@ -30,21 +30,21 @@ import Getraenkehandel.Snack;
 
 public class Hauptfenster extends JFrame implements ActionListener{
 
-    int y_position;
-    int y_laenge_waren;
-    Getraenk aktuellesgetraenk;
-    Snack aktuellersnack;
-    JPanel getraenkeliste;
-    JPanel getraenkeanzeige;
-    JPanel snackliste;
-    Color coolcolour1;
-    Color coolcolour2;
-    Color coolcolour3;
-    Color coolcolour4;
-    Color coolcolour5;
-    String typ;
-    Kasse kasse;
-    HashMap<Produkt, Integer> warenkorb;
+    private int y_position;
+    private int y_laenge_waren;
+    private Getraenk aktuellesgetraenk;
+    private Snack aktuellersnack;
+    private JPanel getraenkeliste;
+    private JPanel getraenkeanzeige;
+    private JPanel snackliste;
+    private Color coolcolour1;
+    private Color coolcolour2;
+    private Color coolcolour3;
+    private Color coolcolour4;
+    private Color coolcolour5;
+    private String typ;
+    private Kasse kasse;
+    private HashMap<Produkt, Integer> warenkorb;
 
     private JLabel getraenkename;
     private JLabel getraenkebestand;
@@ -54,7 +54,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
     private MyLabel snackname;
     private MyLabel snackbestand;
     private MyLabel snackpreis;
-    JPanel warenkorbJPanel;
+    private JPanel warenkorbJPanel;
     private int getraenkeanzahl;
     private JFormattedTextField anzahlgetraenke;
     private MyButton getraenkwarenkorb;
