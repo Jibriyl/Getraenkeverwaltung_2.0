@@ -258,7 +258,7 @@ public class Hauptfenster extends JFrame implements ActionListener{
         JButton erhoeheBestand = new MyButton(coolcolour5, coolcolour3, "Bestand erhöhen", 640, 0, 280, 40);
         erhoeheBestand.addActionListener(e ->{
             //Bei drücken des Buttons, wird neues bestanderhöhen fenster geöffnet und die erhöhen methode ausgeführt
-            Bestangerhoehen bestandfenster = new Bestangerhoehen(getraenkemap, snackmap, coolcolour3, coolcolour5, typ, this);
+            Bestanderhoehen bestandfenster = new Bestanderhoehen(getraenkemap, snackmap, coolcolour3, coolcolour5, typ, this);
         });
         topbar.add(erhoeheBestand);
 

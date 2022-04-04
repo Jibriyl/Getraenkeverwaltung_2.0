@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
 
-public class Bestangerhoehen extends JFrame implements ActionListener{
+public class Bestanderhoehen extends JFrame implements ActionListener{
     
     private JButton bestaetigen;
     private JFormattedTextField anzahlfeld;
@@ -28,7 +28,7 @@ public class Bestangerhoehen extends JFrame implements ActionListener{
     private JComboBox snackbox;
     Hauptfenster haupt;
 
-    public Bestangerhoehen(HashMap<String, Getraenk> getraenke, HashMap<String, Snack> snacks, Color schriftcolor, Color backgroundcolor, String typ, Hauptfenster haupt){
+    public Bestanderhoehen(HashMap<String, Getraenk> getraenke, HashMap<String, Snack> snacks, Color schriftcolor, Color backgroundcolor, String typ, Hauptfenster haupt){
         
         this.setSize(420, 360);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
